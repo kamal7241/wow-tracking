@@ -7,132 +7,136 @@
       </div>
     </div>
 
-    <div class="panel">
-      <div class="summary-grid">
-        <div class="summary-card">
-          <p class="summary-title">Today</p>
-          <p class="summary-value">{{ formatMinutes(todayMinutes) }}</p>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <p class="summary-title">Today</p>
+        <p class="summary-value">{{ formatMinutes(todayMinutes) }}</p>
+      </div>
+      <div class="summary-card">
+        <p class="summary-title">This week</p>
+        <p class="summary-value">{{ formatMinutes(weekMinutes) }}</p>
+      </div>
+      <div class="summary-card">
+        <p class="summary-title">Active timer</p>
+        <p class="summary-value">{{ activeTimer ? elapsedDisplay : 'None' }}</p>
+      </div>
+    </div>
+
+    <div class="page-columns">
+      <div class="page-col-left">
+        <div class="panel">
+          <div class="page-header">
+            <div>
+              <h3 class="page-title">Active timer</h3>
+              <p class="page-subtitle">Track task time while you work.</p>
+            </div>
+            <button class="button button-secondary" @click="handleStopTimer" v-if="activeTimer">Stop timer</button>
+          </div>
+
+          <div v-if="activeTimer" class="task-card task-card--active">
+            <div class="task-title-row">
+              <h4 class="task-title">{{ activeTimer.taskTitle }}</h4>
+              <span class="badge medium">Tracking</span>
+            </div>
+            <div class="task-meta">
+              <span>{{ activeTaskName }}</span>
+              <span class="timer-elapsed">⏱ {{ elapsedDisplay }}</span>
+            </div>
+          </div>
+
+          <div v-else class="task-card">
+            <p class="task-meta">No active timer. Start one from the Kanban board.</p>
+          </div>
         </div>
-        <div class="summary-card">
-          <p class="summary-title">This week</p>
-          <p class="summary-value">{{ formatMinutes(weekMinutes) }}</p>
-        </div>
-        <div class="summary-card">
-          <p class="summary-title">Active timer</p>
-          <p class="summary-value">{{ activeTimer ? elapsedDisplay : 'None' }}</p>
+
+        <div class="panel">
+          <div class="page-header">
+            <div>
+              <h3 class="page-title">Manual entry</h3>
+              <p class="page-subtitle">Add hours for work that was tracked outside the timer.</p>
+            </div>
+            <button class="button" @click="submitManualEntry">Add entry</button>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="task">Task</label>
+              <select id="task" v-model="manual.taskId">
+                <option v-for="task in tasks" :key="task.id" :value="task.id">{{ task.title }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="duration">Duration (minutes)</label>
+              <input id="duration" type="number" min="5" step="5" v-model.number="manual.durationMinutes" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="date">Date</label>
+              <input id="date" type="date" v-model="manual.date" />
+            </div>
+            <div class="field">
+              <label for="billable">Billable</label>
+              <select id="billable" v-model="manual.billable">
+                <option :value="true">Yes</option>
+                <option :value="false">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="notes">Notes</label>
+            <textarea id="notes" v-model="manual.notes" placeholder="Optional details"></textarea>
+          </div>
         </div>
       </div>
 
-      <div class="panel" style="margin-top:0;padding:20px;">
-        <div class="page-header">
-          <div>
-            <h3 class="page-title">Active timer</h3>
-            <p class="page-subtitle">Track task time while you work.</p>
+      <div class="page-col-right">
+        <div class="panel">
+          <div class="page-header">
+            <div>
+              <h3 class="page-title">Timesheet log</h3>
+              <p class="page-subtitle">Recent entries created from the timer or manual form.</p>
+            </div>
           </div>
-          <button class="button button-secondary" @click="handleStopTimer" v-if="activeTimer">Stop timer</button>
-        </div>
 
-        <div v-if="activeTimer" class="task-card task-card--active">
-          <div class="task-title-row">
-            <h4 class="task-title">{{ activeTimer.taskTitle }}</h4>
-            <span class="badge medium">Tracking</span>
+          <div class="board-controls" style="margin-bottom:16px;">
+            <div class="field" style="margin-bottom:0;">
+              <label for="memberFilter">Filter by member</label>
+              <select id="memberFilter" v-model="memberFilter">
+                <option value="">All members</option>
+                <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
+              </select>
+            </div>
           </div>
-          <div class="task-meta">
-            <span>{{ activeTaskName }}</span>
-            <span class="timer-elapsed">⏱ {{ elapsedDisplay }}</span>
-          </div>
-        </div>
 
-        <div v-else class="task-card">
-          <p class="task-meta">No active timer. Start one from the Kanban board.</p>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-top:24px;">
-        <div class="page-header">
-          <div>
-            <h3 class="page-title">Manual entry</h3>
-            <p class="page-subtitle">Add hours for work that was tracked outside the timer.</p>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Member</th>
+                  <th>Duration</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="entry in filteredEntries" :key="entry.id">
+                  <td>{{ entry.taskTitle }}</td>
+                  <td>{{ memberName(entry.memberId) }}</td>
+                  <td>{{ formatMinutes(entry.durationMinutes) }}</td>
+                  <td>{{ formatDate(entry.startedAt) }}</td>
+                  <td><span class="status-chip">{{ entry.billable ? 'Billable' : 'Non-billable' }}</span></td>
+                  <td><button class="button button-secondary" style="padding:6px 12px;font-size:0.82rem;" type="button"
+                      @click="deleteEntry(entry.id)">Delete</button></td>
+                </tr>
+                <tr v-if="filteredEntries.length === 0">
+                  <td colspan="6" style="padding: 22px 16px; color: var(--muted);">No time entries yet.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <button class="button" @click="submitManualEntry">Add entry</button>
-        </div>
-
-        <div class="form-row">
-          <div class="field">
-            <label for="task">Task</label>
-            <select id="task" v-model="manual.taskId">
-              <option v-for="task in tasks" :key="task.id" :value="task.id">{{ task.title }}</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="duration">Duration (minutes)</label>
-            <input id="duration" type="number" min="5" step="5" v-model.number="manual.durationMinutes" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="field">
-            <label for="date">Date</label>
-            <input id="date" type="date" v-model="manual.date" />
-          </div>
-          <div class="field">
-            <label for="billable">Billable</label>
-            <select id="billable" v-model="manual.billable">
-              <option :value="true">Yes</option>
-              <option :value="false">No</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label for="notes">Notes</label>
-          <textarea id="notes" v-model="manual.notes" placeholder="Optional details"></textarea>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-top:24px;">
-        <div class="page-header">
-          <div>
-            <h3 class="page-title">Timesheet log</h3>
-            <p class="page-subtitle">Recent entries created from the timer or manual form.</p>
-          </div>
-        </div>
-
-        <div class="board-controls" style="margin-bottom:16px;">
-          <div class="field" style="margin-bottom:0;">
-            <label for="memberFilter">Filter by member</label>
-            <select id="memberFilter" v-model="memberFilter">
-              <option value="">All members</option>
-              <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="table-wrapper">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Task</th>
-                <th>Member</th>
-                <th>Duration</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="entry in filteredEntries" :key="entry.id">
-                <td>{{ entry.taskTitle }}</td>
-                <td>{{ memberName(entry.memberId) }}</td>
-                <td>{{ formatMinutes(entry.durationMinutes) }}</td>
-                <td>{{ formatDate(entry.startedAt) }}</td>
-                <td><span class="status-chip">{{ entry.billable ? 'Billable' : 'Non-billable' }}</span></td>
-                <td><button class="button button-secondary" style="padding:6px 12px;font-size:0.82rem;" type="button"
-                    @click="deleteEntry(entry.id)">Delete</button></td>
-              </tr>
-              <tr v-if="filteredEntries.length === 0">
-                <td colspan="6" style="padding: 22px 16px; color: var(--muted);">No time entries yet.</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

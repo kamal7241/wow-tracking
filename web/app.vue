@@ -69,14 +69,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { usePocStore } from '../composables/usePocStore'
+import { usePocStore } from '~/composables/usePocStore'
 
 const store = usePocStore()
 const activeTask = store.activeTask
 const activeTimer = store.activeTimer
 const tasks = store.tasks
 const timeEntries = store.timeEntries
-const route = useRoute()
 const now = ref(Date.now())
 let clockInterval: ReturnType<typeof setInterval> | null = null
 
@@ -93,7 +92,8 @@ const sameDay = (a: Date, b: Date) =>
 const todayMins = computed(() => {
   const today = new Date()
   return timeEntries.value.reduce(
-    (sum, e) => (sameDay(new Date(e.startedAt), today) ? sum + e.durationMinutes : sum), 0,
+    (sum, e) => (sameDay(new Date(e.startedAt), today) ? sum + e.durationMinutes : sum),
+    0,
   )
 })
 
@@ -101,7 +101,8 @@ const weekMins = computed(() => {
   const weekStart = new Date()
   weekStart.setDate(weekStart.getDate() - 7)
   return timeEntries.value.reduce(
-    (sum, e) => (new Date(e.startedAt) >= weekStart ? sum + e.durationMinutes : sum), 0,
+    (sum, e) => (new Date(e.startedAt) >= weekStart ? sum + e.durationMinutes : sum),
+    0,
   )
 })
 
