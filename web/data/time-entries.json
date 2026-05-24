@@ -1,4 +1,57 @@
 [
-  {"id":"entry-1","taskId":"task-2","taskTitle":"Implement task card timer","memberId":"member-2","startedAt":"2026-05-24T08:30:00.000Z","stoppedAt":"2026-05-24T09:15:00.000Z","durationMinutes":45,"notes":"Tracked timer for progress demo","billable":true},
-  {"id":"entry-2","taskId":"task-4","taskTitle":"Seed demo data","memberId":"member-1","startedAt":"2026-05-23T11:00:00.000Z","stoppedAt":"2026-05-23T11:50:00.000Z","durationMinutes":50,"notes":"Prepared seeded tasks and entries","billable":false}
+  {
+    "id": "beb95716-1540-4e4b-90a1-c6130a7fa6ba",
+    "taskId": "task-4",
+    "taskTitle": "Seed demo data",
+    "memberId": "member-1",
+    "startedAt": "2026-05-24T23:17:58.950Z",
+    "stoppedAt": "2026-05-24T23:18:29.334Z",
+    "durationMinutes": 1,
+    "notes": "Live tracking",
+    "billable": true
+  },
+  {
+    "id": "9d4d797d-4622-4de5-9b9c-05718bcefdd4",
+    "taskId": "task-3",
+    "taskTitle": "Build time tracking page",
+    "memberId": "member-1",
+    "startedAt": "2026-05-24T23:17:55.480Z",
+    "stoppedAt": "2026-05-24T23:17:58.939Z",
+    "durationMinutes": 1,
+    "notes": "Live tracking",
+    "billable": true
+  },
+  {
+    "id": "5ec8ed0e-a4fa-47fd-89f1-b9e525c75bec",
+    "taskId": "task-1",
+    "taskTitle": "Design Kanban layout",
+    "memberId": "member-3",
+    "startedAt": "2026-05-24T23:17:42.939Z",
+    "stoppedAt": "2026-05-24T23:17:55.466Z",
+    "durationMinutes": 1,
+    "notes": "Live tracking",
+    "billable": true
+  },
+  {
+    "id": "entry-1",
+    "taskId": "task-2",
+    "taskTitle": "Implement task card timer",
+    "memberId": "member-2",
+    "startedAt": "2026-05-24T08:30:00.000Z",
+    "stoppedAt": "2026-05-24T09:15:00.000Z",
+    "durationMinutes": 45,
+    "notes": "Tracked timer for progress demo",
+    "billable": true
+  },
+  {
+    "id": "entry-2",
+    "taskId": "task-4",
+    "taskTitle": "Seed demo data",
+    "memberId": "member-1",
+    "startedAt": "2026-05-23T11:00:00.000Z",
+    "stoppedAt": "2026-05-23T11:50:00.000Z",
+    "durationMinutes": 50,
+    "notes": "Prepared seeded tasks and entries",
+    "billable": false
+  }
 ]

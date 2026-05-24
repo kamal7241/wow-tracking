@@ -11,6 +11,7 @@ export interface Task {
   priority: TaskPriority
   assigneeId: string
   dueDate: string
+  estimatedHours?: number
 }
 
 export interface TimeEntry {
@@ -53,7 +54,7 @@ export const usePocStore = () => {
   const loadAll = async () => {
     loading.value = true
     try {
-      await Promise.all([fetchTasks(), fetchMembers(), fetchTimeEntries()])
+      await Promise.all([fetchTasks(), fetchMembers(), fetchTimeEntries(), fetchActiveTimer()])
     } finally {
       loading.value = false
     }
@@ -74,6 +75,12 @@ export const usePocStore = () => {
   const fetchTimeEntries = async () => {
     const data = await $fetch<TimeEntry[]>('/api/time-entries')
     timeEntries.value = data
+    return data
+  }
+
+  const fetchActiveTimer = async () => {
+    const data = await $fetch<TimeEntry | null>('/api/timer')
+    activeTimer.value = data
     return data
   }
 
@@ -109,30 +116,28 @@ export const usePocStore = () => {
     return data
   }
 
+  const deleteTimeEntry = async (entryId: string) => {
+    await $fetch(`/api/time-entries/${entryId}`, { method: 'DELETE' })
+    timeEntries.value = timeEntries.value.filter((entry) => entry.id !== entryId)
+  }
+
   const startTimer = async (task: Task) => {
-    activeTimer.value = {
-      id: `${task.id}-${Date.now()}`,
-      taskId: task.id,
-      taskTitle: task.title,
-      memberId: task.assigneeId,
-      startedAt: new Date().toISOString(),
-      stoppedAt: '',
-      durationMinutes: 0,
-      notes: 'Live tracking',
-      billable: true,
+    const timer = await $fetch<TimeEntry>('/api/timer', {
+      method: 'POST',
+      body: { taskId: task.id, taskTitle: task.title, memberId: task.assigneeId },
+    })
+    activeTimer.value = timer
+    if (task.status === 'todo') {
+      await updateTask({ ...task, status: 'in-progress' })
     }
   }
 
   const stopTimer = async () => {
     if (!activeTimer.value) return null
-    const durationMinutes = activeDurationMinutes.value
-    const entry: Omit<TimeEntry, 'id'> = {
-      ...activeTimer.value,
-      stoppedAt: new Date().toISOString(),
-      durationMinutes,
-    }
+    const entry = await $fetch<TimeEntry | null>('/api/timer', { method: 'DELETE' })
     activeTimer.value = null
-    return await createTimeEntry(entry)
+    if (entry) timeEntries.value = [entry, ...timeEntries.value]
+    return entry
   }
 
   return {
@@ -147,11 +152,13 @@ export const usePocStore = () => {
     fetchTasks,
     fetchMembers,
     fetchTimeEntries,
+    fetchActiveTimer,
     createTask,
     updateTask,
     deleteTask,
     startTimer,
     stopTimer,
     createTimeEntry,
+    deleteTimeEntry,
   }
 }

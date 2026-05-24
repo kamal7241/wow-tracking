@@ -19,7 +19,7 @@
         </div>
         <div class="summary-card">
           <p class="summary-title">Active timer</p>
-          <p class="summary-value">{{ store.activeTimer ? formatMinutes(store.activeDurationMinutes) : 'None' }}</p>
+          <p class="summary-value">{{ activeTimer ? elapsedDisplay : 'None' }}</p>
         </div>
       </div>
 
@@ -29,17 +29,17 @@
             <h3 class="page-title">Active timer</h3>
             <p class="page-subtitle">Track task time while you work.</p>
           </div>
-          <button class="button button-secondary" @click="handleStopTimer" v-if="store.activeTimer">Stop timer</button>
+          <button class="button button-secondary" @click="handleStopTimer" v-if="activeTimer">Stop timer</button>
         </div>
 
-        <div v-if="store.activeTimer" class="task-card">
+        <div v-if="activeTimer" class="task-card task-card--active">
           <div class="task-title-row">
-            <h4 class="task-title">{{ store.activeTimer.taskTitle }}</h4>
+            <h4 class="task-title">{{ activeTimer.taskTitle }}</h4>
             <span class="badge medium">Tracking</span>
           </div>
           <div class="task-meta">
             <span>{{ activeTaskName }}</span>
-            <span>{{ formatMinutes(store.activeDurationMinutes) }}</span>
+            <span class="timer-elapsed">⏱ {{ elapsedDisplay }}</span>
           </div>
         </div>
 
@@ -61,7 +61,7 @@
           <div class="field">
             <label for="task">Task</label>
             <select id="task" v-model="manual.taskId">
-              <option v-for="task in store.tasks" :key="task.id" :value="task.id">{{ task.title }}</option>
+              <option v-for="task in tasks" :key="task.id" :value="task.id">{{ task.title }}</option>
             </select>
           </div>
           <div class="field">
@@ -96,6 +96,16 @@
           </div>
         </div>
 
+        <div class="board-controls" style="margin-bottom:16px;">
+          <div class="field" style="margin-bottom:0;">
+            <label for="memberFilter">Filter by member</label>
+            <select id="memberFilter" v-model="memberFilter">
+              <option value="">All members</option>
+              <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
+            </select>
+          </div>
+        </div>
+
         <div class="table-wrapper">
           <table class="table">
             <thead>
@@ -105,18 +115,21 @@
                 <th>Duration</th>
                 <th>Date</th>
                 <th>Status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="entry in sortedEntries" :key="entry.id">
+              <tr v-for="entry in filteredEntries" :key="entry.id">
                 <td>{{ entry.taskTitle }}</td>
                 <td>{{ memberName(entry.memberId) }}</td>
                 <td>{{ formatMinutes(entry.durationMinutes) }}</td>
                 <td>{{ formatDate(entry.startedAt) }}</td>
                 <td><span class="status-chip">{{ entry.billable ? 'Billable' : 'Non-billable' }}</span></td>
+                <td><button class="button button-secondary" style="padding:6px 12px;font-size:0.82rem;" type="button"
+                    @click="deleteEntry(entry.id)">Delete</button></td>
               </tr>
-              <tr v-if="sortedEntries.length === 0">
-                <td colspan="5" style="padding: 22px 16px; color: var(--muted);">No time entries yet.</td>
+              <tr v-if="filteredEntries.length === 0">
+                <td colspan="6" style="padding: 22px 16px; color: var(--muted);">No time entries yet.</td>
               </tr>
             </tbody>
           </table>
@@ -127,10 +140,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue'
 import { usePocStore } from '@/composables/usePocStore'
 
 const store = usePocStore()
+const activeTask = store.activeTask
+const activeTimer = store.activeTimer
+const tasks = store.tasks
+const members = store.members
+const memberFilter = ref('')
+const now = ref(Date.now())
+let clockInterval: ReturnType<typeof setInterval> | null = null
 
 const manual = reactive({
   taskId: '',
@@ -163,22 +183,31 @@ const sameDay = (a: Date, b: Date) => {
 
 const todayMinutes = computed(() => {
   const today = new Date()
-  return store.timeEntries.reduce((total, entry) => {
+  return store.timeEntries.value.reduce((total: number, entry: any) => {
     return sameDay(new Date(entry.startedAt), today) ? total + entry.durationMinutes : total
   }, 0)
 })
 
 const weekMinutes = computed(() => {
-  const now = new Date()
-  const weekAgo = new Date(now)
-  weekAgo.setDate(now.getDate() - 7)
-  return store.timeEntries.reduce((total, entry) => {
-    const date = new Date(entry.startedAt)
-    return date >= weekAgo ? total + entry.durationMinutes : total
+  const weekStart = new Date()
+  weekStart.setDate(weekStart.getDate() - 7)
+  return store.timeEntries.value.reduce((total: number, entry: any) => {
+    return new Date(entry.startedAt) >= weekStart ? total + entry.durationMinutes : total
   }, 0)
 })
 
-const activeTaskName = computed(() => store.activeTask?.title ?? 'No active task')
+const activeTaskName = computed(() => store.activeTask.value?.title ?? 'No active task')
+
+const elapsedDisplay = computed(() => {
+  const timer = activeTimer.value
+  if (!timer?.startedAt) return '0:00:00'
+  const diff = Math.max(0, now.value - new Date(timer.startedAt).getTime())
+  const totalSeconds = Math.floor(diff / 1000)
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+})
 
 const handleStopTimer = async () => {
   await store.stopTimer()
@@ -186,7 +215,7 @@ const handleStopTimer = async () => {
 
 const submitManualEntry = async () => {
   if (!manual.taskId || manual.durationMinutes < 5) return
-  const task = store.tasks.find((item) => item.id === manual.taskId)
+  const task = store.tasks.value.find((item: any) => item.id === manual.taskId)
   if (!task) return
 
   const started = new Date(`${manual.date}T09:00:00.000Z`)
@@ -208,23 +237,39 @@ const submitManualEntry = async () => {
 }
 
 const memberName = (memberId: string) => {
-  return store.members.find((member) => member.id === memberId)?.name ?? 'Unknown'
+  return store.members.value.find((member: any) => member.id === memberId)?.name ?? 'Unknown'
 }
 
 const sortedEntries = computed(() => {
-  return [...store.timeEntries].sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())
+  return [...store.timeEntries.value].sort((a: any, b: any) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())
 })
+
+const filteredEntries = computed(() => {
+  if (!memberFilter.value) return sortedEntries.value
+  return sortedEntries.value.filter((entry: any) => entry.memberId === memberFilter.value)
+})
+
+const deleteEntry = async (entryId: string) => {
+  const confirmed = confirm('Delete this time entry? This cannot be undone.')
+  if (!confirmed) return
+  await store.deleteTimeEntry(entryId)
+}
 
 onMounted(async () => {
   await store.loadAll()
-  if (!manual.taskId && store.tasks.length) {
-    manual.taskId = store.tasks[0].id
+  if (!manual.taskId && store.tasks.value.length) {
+    manual.taskId = store.tasks.value[0]?.id ?? ''
   }
+  clockInterval = setInterval(() => { now.value = Date.now() }, 1000)
+})
+
+onUnmounted(() => {
+  if (clockInterval) clearInterval(clockInterval)
 })
 
 watchEffect(() => {
-  if (!manual.taskId && store.tasks.length) {
-    manual.taskId = store.tasks[0].id
+  if (!manual.taskId && store.tasks.value.length) {
+    manual.taskId = store.tasks.value[0]?.id ?? ''
   }
 })
 </script>
