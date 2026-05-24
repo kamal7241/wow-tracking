@@ -1,0 +1,4 @@
+[
+  {"id":"entry-1","taskId":"task-2","taskTitle":"Implement task card timer","memberId":"member-2","startedAt":"2026-05-24T08:30:00.000Z","stoppedAt":"2026-05-24T09:15:00.000Z","durationMinutes":45,"notes":"Tracked timer for progress demo","billable":true},
+  {"id":"entry-2","taskId":"task-4","taskTitle":"Seed demo data","memberId":"member-1","startedAt":"2026-05-23T11:00:00.000Z","stoppedAt":"2026-05-23T11:50:00.000Z","durationMinutes":50,"notes":"Prepared seeded tasks and entries","billable":false}
+]

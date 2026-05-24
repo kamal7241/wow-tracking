@@ -1,0 +1,6 @@
+[
+  {"id":"task-1","title":"Design Kanban layout","description":"Create the kanban board UI for task management and tracking.","status":"todo","priority":"high","assigneeId":"member-3","dueDate":"2026-06-04"},
+  {"id":"task-2","title":"Implement task card timer","description":"Add start/stop timer button directly on task cards.","status":"in-progress","priority":"critical","assigneeId":"member-2","dueDate":"2026-06-01"},
+  {"id":"task-3","title":"Build time tracking page","description":"Create the timesheet page with active timer and manual entries.","status":"in-review","priority":"medium","assigneeId":"member-1","dueDate":"2026-06-03"},
+  {"id":"task-4","title":"Seed demo data","description":"Add realistic tasks, members, and time logs for the POC preview.","status":"done","priority":"low","assigneeId":"member-1","dueDate":"2026-05-31"}
+]
