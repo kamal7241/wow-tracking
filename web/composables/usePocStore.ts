@@ -2,6 +2,15 @@ import { computed } from 'vue'
 
 export type TaskStatus = 'todo' | 'in-progress' | 'in-review' | 'done'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'critical'
+export type SubtaskStatus = 'todo' | 'in-progress' | 'done'
+
+export interface Subtask {
+  id: string
+  title: string
+  status: SubtaskStatus
+  assigneeId?: string
+  estimatedHours?: number
+}
 
 export interface Task {
   id: string
@@ -9,9 +18,10 @@ export interface Task {
   description: string
   status: TaskStatus
   priority: TaskPriority
-  assigneeId: string
+  assigneeId?: string
   dueDate: string
   estimatedHours?: number
+  subtasks?: Subtask[]
 }
 
 export interface TimeEntry {
@@ -24,6 +34,8 @@ export interface TimeEntry {
   durationMinutes: number
   notes: string
   billable: boolean
+  subtaskId?: string
+  subtaskTitle?: string
 }
 
 export interface Member {
@@ -37,16 +49,21 @@ export const usePocStore = () => {
   const tasks = useState<Task[]>('poc-tasks', () => [])
   const members = useState<Member[]>('poc-members', () => [])
   const timeEntries = useState<TimeEntry[]>('poc-time-entries', () => [])
-  const activeTimer = useState<TimeEntry | null>('poc-active-timer', () => null)
+  const activeTimers = useState<TimeEntry[]>('poc-active-timers', () => [])
   const loading = useState<boolean>('poc-loading', () => false)
 
+  // Backward-compat single-timer view (first active timer)
+  const activeTimer = computed(() => activeTimers.value[0] ?? null)
+
   const activeTask = computed(() => {
-    return tasks.value.find((task) => task.id === activeTimer.value?.taskId) ?? null
+    const id = activeTimers.value[0]?.taskId
+    return id ? tasks.value.find((task) => task.id === id) ?? null : null
   })
 
   const activeDurationMinutes = computed(() => {
-    if (!activeTimer.value) return 0
-    const started = new Date(activeTimer.value.startedAt).getTime()
+    const first = activeTimers.value[0]
+    if (!first) return 0
+    const started = new Date(first.startedAt).getTime()
     const diff = Date.now() - started
     return Math.max(1, Math.floor(diff / 60000))
   })
@@ -79,9 +96,9 @@ export const usePocStore = () => {
   }
 
   const fetchActiveTimer = async () => {
-    const data = await $fetch<TimeEntry | null>('/api/timer')
-    activeTimer.value = data
-    return data
+    const data = await $fetch<TimeEntry[]>('/api/timer')
+    activeTimers.value = Array.isArray(data) ? data : (data ? [data as TimeEntry] : [])
+    return activeTimers.value
   }
 
   const createTask = async (task: Omit<Task, 'id'>) => {
@@ -121,29 +138,45 @@ export const usePocStore = () => {
     timeEntries.value = timeEntries.value.filter((entry) => entry.id !== entryId)
   }
 
-  const startTimer = async (task: Task) => {
+  const startTimer = async (task: Task, subtask?: Subtask) => {
     const timer = await $fetch<TimeEntry>('/api/timer', {
       method: 'POST',
-      body: { taskId: task.id, taskTitle: task.title, memberId: task.assigneeId },
+      body: {
+        taskId: task.id,
+        taskTitle: task.title,
+        memberId: subtask?.assigneeId ?? task.assigneeId ?? '',
+        subtaskId: subtask?.id,
+        subtaskTitle: subtask?.title,
+      },
     })
-    activeTimer.value = timer
-    if (task.status === 'todo') {
-      await updateTask({ ...task, status: 'in-progress' })
+    activeTimers.value = [...activeTimers.value, timer]
+    if (subtask) {
+      const subtasks = (task.subtasks ?? []).map((s) =>
+        s.id === subtask.id ? { ...s, status: 'in-progress' as SubtaskStatus } : s,
+      )
+      await updateTask({ ...task, subtasks })
     }
   }
 
-  const stopTimer = async () => {
-    if (!activeTimer.value) return null
-    const entry = await $fetch<TimeEntry | null>('/api/timer', { method: 'DELETE' })
-    activeTimer.value = null
-    if (entry) timeEntries.value = [entry, ...timeEntries.value]
-    return entry
+  const stopTimer = async (subtaskId?: string) => {
+    if (!activeTimers.value.length) return null
+    const query = subtaskId ? `?subtaskId=${encodeURIComponent(subtaskId)}` : ''
+    const result = await $fetch<TimeEntry | TimeEntry[] | null>(`/api/timer${query}`, { method: 'DELETE' })
+    if (subtaskId) {
+      activeTimers.value = activeTimers.value.filter((t) => t.subtaskId !== subtaskId)
+    } else {
+      activeTimers.value = []
+    }
+    const entries = result ? (Array.isArray(result) ? result : [result]) : []
+    if (entries.length) timeEntries.value = [...entries, ...timeEntries.value]
+    return entries[0] ?? null
   }
 
   return {
     tasks,
     members,
     timeEntries,
+    activeTimers,
     activeTimer,
     activeTask,
     activeDurationMinutes,

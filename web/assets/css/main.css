@@ -203,7 +203,7 @@ img {
 
 .grid-cols-4 {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(300px, 1fr));
   gap: 18px;
 }
 
@@ -250,6 +250,8 @@ img {
   padding: 18px;
   display: grid;
   gap: 10px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .board-controls {
@@ -614,6 +616,390 @@ img {
 .task-progress-fill--over {
   background: var(--danger);
 }
+
+/* ── Subtasks ───────────────────────────────────────────────────────────────── */
+
+/* Progress pill on card */
+.subtask-bar {
+  margin: 6px 0 2px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.subtask-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.subtask-icon {
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+.subtask-count {
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.subtask-label { flex: 1; }
+
+.subtask-chevron {
+  font-size: 0.6rem;
+  color: var(--muted);
+}
+
+.subtask-progress {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.subtask-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Inline expanded list on card */
+.subtask-list {
+  display: grid;
+  gap: 2px;
+  margin: 4px 0 6px;
+  padding: 8px 10px;
+  background: var(--surface-strong);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.subtask-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+  padding: 6px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.83rem;
+}
+
+.subtask-row:hover { background: var(--border); }
+
+.subtask-row-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.subtask-row-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.subtask-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+/* Per-task time progress bar */
+.subtask-row-bar {
+  height: 3px;
+  background: color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-right: 4px;
+}
+
+.subtask-row-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  min-width: 0;
+}
+
+.subtask-row-bar-fill--over {
+  background: var(--danger);
+}
+
+.subtask-row--active {
+  background: #fff8f0;
+  border-left: 2px solid var(--danger);
+  padding-left: 6px;
+}
+
+.subtask-row--done .subtask-title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.subtask-check {
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.subtask-title {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.subtask-remove {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1rem;
+  padding: 0 2px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+/* In-progress task row */
+.subtask-row--inprogress .subtask-title {
+  color: var(--accent);
+}
+
+/* Multiple assignees stack on feature card */
+.assignees-stack {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.assignees-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Status dot button (replaces checkbox) */
+.subtask-status-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.subtask-status-btn:hover { transform: scale(1.2); }
+
+/* Task estimate badge */
+.subtask-est {
+  font-size: 0.73rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+/* Total estimate in the subtask bar */
+.subtask-total-est {
+  font-size: 0.73rem;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  margin-left: auto;
+  margin-right: 4px;
+}
+
+/* "+ Add task" button at bottom of expanded list */
+.subtask-add-task-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  margin-top: 4px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.subtask-add-task-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Timer icon button on subtask rows */
+.subtask-timer-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 0;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  opacity: 0;
+}
+
+.subtask-row:hover .subtask-timer-btn,
+.subtask-timer-btn--active { opacity: 1; }
+
+.subtask-timer-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.subtask-timer-btn--active {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: #fff0f0;
+}
+
+/* Elapsed display inside active subtask row */
+.subtask-elapsed {
+  font-size: 0.73rem;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Active tracking badge on feature card header row — icon only, pulsing */
+.task-tracking-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--danger);
+  margin-right: auto;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.2); }
+}
+
+.task-tracking-badge--pulse svg {
+  animation: badge-pulse 1.4s ease-in-out infinite;
+}
+
+/* Icon-only action buttons */
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+  padding: 0;
+}
+.icon-btn:hover {
+  background: var(--border);
+  color: var(--text);
+}
+.icon-btn--danger:hover {
+  background: #fee2e2;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.subtask-row:hover .subtask-remove,
+.subtask-form-row:hover .subtask-remove { opacity: 1; }
+
+/* Inline add input at bottom of expanded card list */
+.subtask-inline-add {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.subtask-inline-input {
+  flex: 1;
+  padding: 5px 8px;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  outline: none;
+}
+
+.subtask-inline-input:focus { border-color: var(--accent); }
+
+.subtask-inline-btn {
+  padding: 5px 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--accent);
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.subtask-inline-btn:hover { background: var(--accent-soft); }
+
+/* Subtasks section inside the Create/Edit modal */
+.subtask-add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.subtask-add-row input {
+  flex: 1;
+}
+
+.subtask-form-list {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  background: var(--surface-strong);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.subtask-form-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.83rem;
+}
+
+.subtask-form-row:hover { background: var(--border); }
 
 /* Sidebar page-specific stats */
 .sidebar-section {

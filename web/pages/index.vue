@@ -5,7 +5,7 @@
         <h2 class="page-title">Kanban board</h2>
         <p class="page-subtitle">Manage tasks, assign team members, and start the timer directly from each card.</p>
       </div>
-      <button class="button" @click="openTaskDialog">Add task</button>
+      <button class="button" @click="openTaskDialog">Add feature</button>
     </div>
 
     <div class="board-controls">
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" style="overflow-x: auto; padding-bottom: 6px;">
       <div class="grid-cols-4">
         <section
           v-for="status in statuses"
@@ -43,7 +43,7 @@
             <article
               v-for="task in tasksByStatus(status.key)"
               :key="task.id"
-              :class="['task-card', { 'task-card--active': activeTask?.id === task.id, 'task-card--overdue': isOverdue(task) }]"
+              :class="['task-card', { 'task-card--active': isFeatureTracking(task), 'task-card--overdue': isOverdue(task) }]"
               draggable="true"
               @dragstart="() => onDragStart(task)"
             >
@@ -58,10 +58,16 @@
                 <span>{{ formatDate(task.dueDate) }}</span>
               </div>
 
-              <div class="task-meta">
-                <div class="assignee">
-                  <span class="avatar">{{ memberInitials(task.assigneeId) }}</span>
-                  {{ memberName(task.assigneeId) }}
+              <!-- Assignees from child tasks -->
+              <div v-if="featureAssignees(task).length" class="task-meta">
+                <div class="assignees-stack">
+                  <span
+                    v-for="m in featureAssignees(task)"
+                    :key="m.id"
+                    class="avatar"
+                    :title="m.name"
+                  >{{ m.initials }}</span>
+                  <span class="assignees-label">{{ featureAssignees(task).map(m => m.name).join(', ') }}</span>
                 </div>
               </div>
 
@@ -82,16 +88,90 @@
                 <span class="timer-elapsed">⏱ {{ taskLoggedHours(task.id) }} logged</span>
               </div>
 
-              <div class="task-actions">
-                <button class="button button-secondary" type="button" @click="openEditDialog(task)">Edit</button>
-                <button class="button button-secondary" type="button" @click="deleteTask(task.id)">Delete</button>
+              <!-- Subtask progress bar (always visible when subtasks exist) -->
+              <div
+                v-if="(task.subtasks?.length ?? 0) > 0"
+                class="subtask-bar"
+                @click.stop="toggleExpand(task.id)"
+                :title="expandedTaskIds.includes(task.id) ? 'Collapse tasks' : 'Expand tasks'"
+              >
+                <div class="subtask-bar-info">
+                  <span class="subtask-icon">⊞</span>
+                  <span class="subtask-count">{{ subtaskDoneCount(task) }} / {{ task.subtasks!.length }}</span>
+                  <span class="subtask-label">tasks</span>
+                  <span v-if="featureTotalEstimate(task)" class="subtask-total-est">{{ featureTotalEstimate(task) }}</span>
+                  <span class="subtask-chevron">{{ expandedTaskIds.includes(task.id) ? '▲' : '▼' }}</span>
+                </div>
+                <div class="subtask-progress">
+                  <div class="subtask-progress-fill" :style="{ width: subtaskPct(task) + '%' }"></div>
+                </div>
               </div>
 
-              <div v-if="activeTask?.id === task.id" class="timer-elapsed">⏱ {{ elapsedDisplay }}</div>
-              <button :class="['tracker-button', { 'tracker-button--active': activeTask?.id === task.id }]"
-                type="button" @click="toggleTaskTimer(task)">
-                {{ activeTask?.id === task.id ? 'Stop timer' : 'Start timer' }}
-              </button>
+              <!-- Expanded inline task list -->
+              <div v-if="expandedTaskIds.includes(task.id)" class="subtask-list">
+                <div
+                  v-for="sub in task.subtasks"
+                  :key="sub.id"
+                  :class="['subtask-row', { 'subtask-row--done': sub.status === 'done', 'subtask-row--inprogress': sub.status === 'in-progress', 'subtask-row--active': isSubtaskActive(sub.id) }]"
+                  @click.stop="openEditTaskDialog(task, sub)"
+                >
+                  <div class="subtask-row-main">
+                    <!-- Square checkbox -->
+                    <button
+                      class="subtask-status-btn"
+                      type="button"
+                      :title="sub.status === 'done' ? 'Mark undone' : 'Mark done'"
+                      @click.stop.prevent="toggleSubtask(task, sub.id)"
+                    >
+                      <!-- done: filled square + checkmark -->
+                      <svg v-if="sub.status === 'done'" width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="var(--success)"/><path d="M7 12l3.5 3.5L17 8" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <!-- in-progress: soft square + dash -->
+                      <svg v-else-if="sub.status === 'in-progress'" width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" stroke="var(--accent)" stroke-width="2" fill="var(--accent-soft)"/><line x1="8" y1="12" x2="16" y2="12" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/></svg>
+                      <!-- todo: empty square -->
+                      <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
+                    </button>
+                    <div class="subtask-row-content">
+                      <span class="subtask-title">{{ sub.title }}</span>
+                      <div class="subtask-row-meta">
+                        <span v-if="sub.estimatedHours" class="subtask-est">{{ sub.estimatedHours }}h</span>
+                        <span v-if="isSubtaskActive(sub.id)" class="subtask-elapsed">{{ elapsedFor(sub.id) }}</span>
+                        <button
+                          :class="['subtask-timer-btn', { 'subtask-timer-btn--active': isSubtaskActive(sub.id) }]"
+                          type="button"
+                          :title="isSubtaskActive(sub.id) ? 'Stop timer' : 'Start timer'"
+                          @click.stop.prevent="toggleSubtaskTimer(task, sub)"
+                        >
+                          <svg v-if="!isSubtaskActive(sub.id)" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                          <svg v-else xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+                        </button>
+                        <button class="subtask-remove" type="button" @click.stop.prevent="removeSubtask(task, sub.id)">×</button>
+                      </div>
+                      <!-- Per-task time progress bar (only when estimate set) -->
+                      <div v-if="sub.estimatedHours" class="subtask-row-bar">
+                        <div
+                          class="subtask-row-bar-fill"
+                          :class="{ 'subtask-row-bar-fill--over': subtaskProgressPct(sub) >= 100 }"
+                          :style="{ width: Math.max(subtaskProgressPct(sub), subtaskLoggedMins(sub.id) > 0 ? 4 : 0) + '%' }"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="subtask-add-task-btn" type="button" @click.stop="openAddTaskDialog(task)">+ Add task</button>
+              </div>
+
+              <div class="task-actions">
+                <div v-if="isFeatureTracking(task)" class="task-tracking-badge task-tracking-badge--pulse">
+                  <!-- Pulsing clock icon — multiple tasks may be running -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <button class="icon-btn" type="button" title="Edit" @click="openEditDialog(task)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="icon-btn icon-btn--danger" type="button" title="Delete" @click="deleteTask(task.id)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                </button>
+              </div>
             </article>
           </div>
           <button class="column-add-btn" type="button" @click="openTaskDialogForStatus(status.key)">+ Add task</button>
@@ -124,7 +204,7 @@
 
     <div v-if="showDialog" class="modal-backdrop" @click.self="closeDialog">
       <div class="modal">
-        <h3>{{ isEditing ? 'Edit task' : 'Create new task' }}</h3>
+        <h3>{{ isEditing ? 'Edit feature' : 'Create new feature' }}</h3>
         <div class="field">
           <label for="title">Title</label>
           <input id="title" v-model="form.title" placeholder="Task name" />
@@ -134,12 +214,6 @@
           <textarea id="description" v-model="form.description" placeholder="Task details"></textarea>
         </div>
         <div class="form-row">
-          <div class="field">
-            <label for="assignee">Assignee</label>
-            <select id="assignee" v-model="form.assigneeId">
-              <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
-            </select>
-          </div>
           <div class="field">
             <label for="priority">Priority</label>
             <select id="priority" v-model="form.priority">
@@ -165,15 +239,38 @@
             <input id="dueDate" type="date" v-model="form.dueDate" />
           </div>
         </div>
+
+        <div class="field">
+          <button class="button" @click="submitTask">{{ isEditing ? 'Update feature' : 'Save feature' }}</button>
+          <button class="button button-secondary" @click="closeDialog" type="button">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task dialog (add / edit a child task with estimate) -->
+    <div v-if="showTaskDialog" class="modal-backdrop" @click.self="closeTaskDialog">
+      <div class="modal">
+        <h3>{{ taskDialogSubtaskId ? 'Edit task' : 'Add task' }}</h3>
+        <div class="field">
+          <label for="taskTitle">Title</label>
+          <input id="taskTitle" v-model="taskForm.title" placeholder="Task name" />
+        </div>
         <div class="form-row">
           <div class="field">
-            <label for="estimatedHours">Estimated hours</label>
-            <input id="estimatedHours" type="number" min="0.5" step="0.5" v-model.number="form.estimatedHours" placeholder="e.g. 4" />
+            <label for="taskAssignee">Assignee</label>
+            <select id="taskAssignee" v-model="taskForm.assigneeId">
+              <option value="">Unassigned</option>
+              <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="taskEst">Estimated hours</label>
+            <input id="taskEst" type="number" min="0.5" step="0.5" v-model.number="taskForm.estimatedHours" placeholder="e.g. 2" />
           </div>
         </div>
         <div class="field">
-          <button class="button" @click="submitTask">{{ isEditing ? 'Update task' : 'Save task' }}</button>
-          <button class="button button-secondary" @click="closeDialog" type="button">Cancel</button>
+          <button class="button" @click="submitTaskDialog">{{ taskDialogSubtaskId ? 'Update task' : 'Add task' }}</button>
+          <button class="button button-secondary" type="button" @click="closeTaskDialog">Cancel</button>
         </div>
       </div>
     </div>
@@ -182,12 +279,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue'
-import { usePocStore, type Task, type TaskStatus, type TaskPriority } from '@/composables/usePocStore'
+import { usePocStore, type Task, type TaskStatus, type TaskPriority, type Subtask, type SubtaskStatus, type Member } from '@/composables/usePocStore'
 
 const store = usePocStore()
 const tasks = store.tasks
 const members = store.members
 const timeEntries = store.timeEntries
+const activeTimers = store.activeTimers
 const showDialog = ref(false)
 const draggedTaskId = ref<string | null>(null)
 const editingTaskId = ref<string | null>(null)
@@ -195,6 +293,21 @@ const dragEnterCounts = reactive<Record<string, number>>({})
 const now = ref(Date.now())
 let clockInterval: ReturnType<typeof setInterval> | null = null
 const isEditing = computed(() => !!editingTaskId.value)
+
+// Subtask state
+const expandedTaskIds = ref<string[]>([])
+const formSubtasks = ref<Subtask[]>([])
+const inlineInputs = reactive<Record<string, string>>({})
+
+// Task (subtask) dialog
+const showTaskDialog = ref(false)
+const taskDialogFeatureId = ref<string | null>(null)
+const taskDialogSubtaskId = ref<string | null>(null)
+const taskForm = reactive({
+  title: '',
+  assigneeId: '',
+  estimatedHours: undefined as number | undefined,
+})
 
 const statuses: { key: TaskStatus; label: string }[] = [
   { key: 'todo', label: 'To Do' },
@@ -221,11 +334,114 @@ const form = reactive({
   title: '',
   description: '',
   priority: 'medium' as TaskPriority,
-  assigneeId: '',
   status: 'todo' as TaskStatus,
   dueDate: '',
-  estimatedHours: undefined as number | undefined,
 })
+
+// ─── Subtask helpers ────────────────────────────────────────────────────────
+const subtaskDoneCount = (task: Task) => (task.subtasks ?? []).filter((s) => s.status === 'done').length
+const subtaskPct = (task: Task) => {
+  const subs = task.subtasks ?? []
+  if (!subs.length) return 0
+  return Math.round((subs.filter((s) => s.status === 'done').length / subs.length) * 100)
+}
+
+const featureTotalEstimate = (task: Task): string | null => {
+  const total = (task.subtasks ?? []).reduce((sum, s) => sum + (s.estimatedHours ?? 0), 0)
+  return total > 0 ? `${total}h` : null
+}
+
+const subtaskLoggedMins = (subtaskId: string): number =>
+  timeEntries.value
+    .filter((e) => e.subtaskId === subtaskId)
+    .reduce((sum, e) => sum + e.durationMinutes, 0)
+
+const subtaskProgressPct = (sub: Subtask): number => {
+  if (!sub.estimatedHours) return 0
+  return Math.min(100, Math.round((subtaskLoggedMins(sub.id) / (sub.estimatedHours * 60)) * 100))
+}
+
+const toggleExpand = (taskId: string) => {
+  if (expandedTaskIds.value.includes(taskId)) {
+    expandedTaskIds.value = expandedTaskIds.value.filter((id) => id !== taskId)
+  } else {
+    expandedTaskIds.value = [...expandedTaskIds.value, taskId]
+  }
+}
+
+const toggleSubtask = async (task: Task, subtaskId: string) => {
+  const subtasks = (task.subtasks ?? []).map((s) =>
+    s.id === subtaskId ? { ...s, status: (s.status === 'done' ? 'todo' : 'done') as SubtaskStatus } : s,
+  )
+  await store.updateTask({ ...task, subtasks })
+}
+
+const removeSubtask = async (task: Task, subtaskId: string) => {
+  const subtasks = (task.subtasks ?? []).filter((s) => s.id !== subtaskId)
+  await store.updateTask({ ...task, subtasks })
+}
+
+const featureAssignees = (task: Task): Member[] => {
+  const ids = [...new Set((task.subtasks ?? []).map((s) => s.assigneeId).filter(Boolean))] as string[]
+  return ids.map((id) => members.value.find((m) => m.id === id)).filter(Boolean) as Member[]
+}
+
+// ─── Task dialog (add/edit child tasks with estimates) ───────────────────────
+const openAddTaskDialog = (feature: Task) => {
+  taskDialogFeatureId.value = feature.id
+  taskDialogSubtaskId.value = null
+  taskForm.title = ''
+  taskForm.assigneeId = ''
+  taskForm.estimatedHours = undefined
+  showTaskDialog.value = true
+}
+
+const openEditTaskDialog = (feature: Task, sub: Subtask) => {
+  taskDialogFeatureId.value = feature.id
+  taskDialogSubtaskId.value = sub.id
+  taskForm.title = sub.title
+  taskForm.assigneeId = sub.assigneeId ?? ''
+  taskForm.estimatedHours = sub.estimatedHours
+  showTaskDialog.value = true
+}
+
+const closeTaskDialog = () => {
+  showTaskDialog.value = false
+  taskDialogFeatureId.value = null
+  taskDialogSubtaskId.value = null
+  taskForm.title = ''
+  taskForm.assigneeId = ''
+  taskForm.estimatedHours = undefined
+}
+
+const submitTaskDialog = async () => {
+  if (!taskForm.title.trim() || !taskDialogFeatureId.value) return
+  const feature = tasks.value.find((t) => t.id === taskDialogFeatureId.value)
+  if (!feature) return
+
+  if (taskDialogSubtaskId.value) {
+    const subtasks = (feature.subtasks ?? []).map((s) =>
+      s.id === taskDialogSubtaskId.value
+        ? { ...s, title: taskForm.title, assigneeId: taskForm.assigneeId || undefined, estimatedHours: taskForm.estimatedHours || undefined }
+        : s,
+    )
+    await store.updateTask({ ...feature, subtasks })
+  } else {
+    const newSub: Subtask = {
+      id: crypto.randomUUID(),
+      title: taskForm.title,
+      status: 'todo' as SubtaskStatus,
+      assigneeId: taskForm.assigneeId || undefined,
+      estimatedHours: taskForm.estimatedHours || undefined,
+    }
+    const subtasks = [...(feature.subtasks ?? []), newSub]
+    await store.updateTask({ ...feature, subtasks })
+    if (!expandedTaskIds.value.includes(feature.id)) {
+      expandedTaskIds.value = [...expandedTaskIds.value, feature.id]
+    }
+  }
+  closeTaskDialog()
+}
 
 const filters = reactive({
   query: '',
@@ -235,15 +451,16 @@ const filters = reactive({
 const filteredTasks = computed(() => {
   const query = filters.query.trim().toLowerCase()
   return tasks.value.filter((task) => {
-    if (filters.assigneeId && task.assigneeId !== filters.assigneeId) {
-      return false
+    if (filters.assigneeId) {
+      const hasAssignee = (task.subtasks ?? []).some((s) => s.assigneeId === filters.assigneeId)
+      if (!hasAssignee) return false
     }
 
     if (!query) {
       return true
     }
 
-    const assignee = memberName(task.assigneeId).toLowerCase()
+    const assignee = memberName(task.assigneeId ?? '').toLowerCase()
     return [
       task.title.toLowerCase(),
       task.description.toLowerCase(),
@@ -258,6 +475,32 @@ const tasksByStatus = (status: TaskStatus) => {
 }
 
 const activeTask = store.activeTask
+
+// ─── Subtask timer helpers ─────────────────────────────────────────────────
+const isSubtaskActive = (subtaskId: string) =>
+  activeTimers.value.some((t) => t.subtaskId === subtaskId)
+
+const isFeatureTracking = (task: Task) =>
+  activeTimers.value.some((t) => t.taskId === task.id)
+
+const elapsedFor = (subtaskId: string): string => {
+  const timer = activeTimers.value.find((t) => t.subtaskId === subtaskId)
+  if (!timer?.startedAt) return '0:00:00'
+  const diff = Math.max(0, now.value - new Date(timer.startedAt).getTime())
+  const totalSeconds = Math.floor(diff / 1000)
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+const toggleSubtaskTimer = async (task: Task, sub: Subtask) => {
+  if (isSubtaskActive(sub.id)) {
+    await store.stopTimer(sub.id)
+    return
+  }
+  await store.startTimer(task, sub)
+}
 
 const memberName = (memberId: string) => {
   return members.value.find((member) => member.id === memberId)?.name ?? 'Unassigned'
@@ -296,8 +539,9 @@ const taskProgressPct = (taskId: string, estimatedHours: number): number => {
   return Math.min(100, Math.round((mins / (estimatedHours * 60)) * 100))
 }
 
+// Keep for summary panel (uses first active timer)
 const elapsedDisplay = computed(() => {
-  const timer = store.activeTimer.value
+  const timer = activeTimers.value[0]
   if (!timer?.startedAt) return '0:00:00'
   const diff = Math.max(0, now.value - new Date(timer.startedAt).getTime())
   const totalSeconds = Math.floor(diff / 1000)
@@ -318,10 +562,9 @@ const openEditDialog = (task: Task) => {
   form.title = task.title
   form.description = task.description
   form.priority = task.priority
-  form.assigneeId = task.assigneeId
   form.status = task.status
   form.dueDate = task.dueDate
-  form.estimatedHours = task.estimatedHours
+  formSubtasks.value = [...(task.subtasks ?? [])]
   showDialog.value = true
 }
 
@@ -335,22 +578,20 @@ const resetForm = () => {
   form.title = ''
   form.description = ''
   form.priority = 'medium'
-  form.assigneeId = members.value[0]?.id ?? ''
   form.status = 'todo'
   form.dueDate = new Date().toISOString().slice(0, 10)
-  form.estimatedHours = undefined
+  formSubtasks.value = []
 }
 
 const submitTask = async () => {
-  if (!form.title.trim() || !form.assigneeId) return
+  if (!form.title.trim()) return
   const payload = {
     title: form.title,
     description: form.description,
     status: form.status,
     priority: form.priority,
-    assigneeId: form.assigneeId,
     dueDate: form.dueDate || new Date().toISOString().slice(0, 10),
-    estimatedHours: form.estimatedHours || undefined,
+    subtasks: formSubtasks.value.length ? [...formSubtasks.value] : undefined,
   }
 
   if (editingTaskId.value) {
@@ -387,17 +628,6 @@ const onDrop = async (status: TaskStatus) => {
   draggedTaskId.value = null
 }
 
-const toggleTaskTimer = async (task: Task) => {
-  if (activeTask.value?.id === task.id) {
-    await store.stopTimer()
-  } else {
-    if (store.activeTimer.value) {
-      await store.stopTimer()
-    }
-    await store.startTimer(task)
-  }
-}
-
 const openTaskDialogForStatus = (statusKey: string) => {
   editingTaskId.value = null
   resetForm()
@@ -407,19 +637,10 @@ const openTaskDialogForStatus = (statusKey: string) => {
 
 onMounted(async () => {
   await store.loadAll()
-  if (!form.assigneeId && members.value.length) {
-    form.assigneeId = members.value[0]?.id ?? ''
-  }
   clockInterval = setInterval(() => { now.value = Date.now() }, 1000)
 })
 
 onUnmounted(() => {
   if (clockInterval) clearInterval(clockInterval)
-})
-
-watchEffect(() => {
-  if (!form.assigneeId && members.value.length) {
-    form.assigneeId = members.value[0]?.id ?? ''
-  }
 })
 </script>

@@ -1,12 +1,163 @@
 [
   {
-    "title": "new test task",
-    "description": "",
-    "status": "todo",
+    "id": "3607f3a6-f133-4e20-a56b-2dccc566448d",
+    "title": "Design system setup",
+    "description": "Establish design tokens, component library baseline, and global CSS variables.",
+    "status": "in-progress",
+    "priority": "high",
+    "dueDate": "2026-06-01",
+    "estimatedHours": 8,
+    "subtasks": [
+      {
+        "id": "sub-1a",
+        "title": "Define color tokens",
+        "status": "done",
+        "assigneeId": "member-1",
+        "estimatedHours": 1
+      },
+      {
+        "id": "sub-1b",
+        "title": "Set up typography scale",
+        "status": "in-progress",
+        "assigneeId": "member-2",
+        "estimatedHours": 1.5
+      },
+      {
+        "id": "sub-1c",
+        "title": "Create button variants",
+        "status": "in-progress",
+        "assigneeId": "member-1",
+        "estimatedHours": 2
+      },
+      {
+        "id": "sub-1d",
+        "title": "Create form field components",
+        "status": "in-progress",
+        "assigneeId": "member-3",
+        "estimatedHours": 2
+      },
+      {
+        "id": "sub-1e",
+        "title": "Document usage guidelines",
+        "status": "in-progress",
+        "assigneeId": "member-2",
+        "estimatedHours": 1
+      }
+    ]
+  },
+  {
+    "id": "task-2",
+    "title": "User authentication flow",
+    "description": "Implement login, registration, and password reset using the agreed auth provider.",
+    "status": "in-progress",
     "priority": "critical",
-    "assigneeId": "member-1",
-    "dueDate": "2026-05-24",
+    "dueDate": "2026-06-10",
+    "estimatedHours": 12,
+    "subtasks": [
+      {
+        "id": "sub-2a",
+        "title": "Login page UI",
+        "status": "in-progress",
+        "assigneeId": "member-2",
+        "estimatedHours": 2
+      },
+      {
+        "id": "sub-2b",
+        "title": "Registration form + validation",
+        "status": "in-progress",
+        "assigneeId": "member-3",
+        "estimatedHours": 3
+      },
+      {
+        "id": "sub-2c",
+        "title": "JWT token storage strategy",
+        "status": "in-progress",
+        "assigneeId": "member-1",
+        "estimatedHours": 2
+      },
+      {
+        "id": "sub-2d",
+        "title": "Password reset email flow",
+        "status": "in-progress",
+        "assigneeId": "member-2",
+        "estimatedHours": 3
+      },
+      {
+        "id": "6045670c-495a-44ba-8270-67c8383e900e",
+        "title": "testk task",
+        "status": "todo"
+      }
+    ]
+  },
+  {
+    "id": "task-3",
+    "title": "API integration for member data",
+    "description": "Connect member CRUD endpoints to the Nuxt backend, add loading and error states.",
+    "status": "in-review",
+    "priority": "medium",
+    "dueDate": "2026-05-30",
+    "estimatedHours": 6,
+    "subtasks": [
+      {
+        "id": "sub-3a",
+        "title": "GET /members endpoint",
+        "status": "done",
+        "assigneeId": "member-3",
+        "estimatedHours": 1
+      },
+      {
+        "id": "sub-3b",
+        "title": "POST /members endpoint",
+        "status": "done",
+        "assigneeId": "member-3",
+        "estimatedHours": 1.5
+      },
+      {
+        "id": "sub-3c",
+        "title": "PUT /members/:id endpoint",
+        "status": "done",
+        "assigneeId": "member-1",
+        "estimatedHours": 1.5
+      },
+      {
+        "id": "sub-3d",
+        "title": "Loading skeleton UI",
+        "status": "todo",
+        "assigneeId": "member-2",
+        "estimatedHours": 1
+      }
+    ]
+  },
+  {
+    "id": "task-4",
+    "title": "Kanban board drag-and-drop",
+    "description": "Allow cards to be dragged between status columns; persist changes to server.",
+    "status": "done",
+    "priority": "high",
+    "dueDate": "2026-05-25",
     "estimatedHours": 4,
-    "id": "3607f3a6-f133-4e20-a56b-2dccc566448d"
+    "subtasks": [
+      {
+        "id": "sub-4a",
+        "title": "HTML5 drag events on cards",
+        "status": "done",
+        "assigneeId": "member-1",
+        "estimatedHours": 1
+      },
+      {
+        "id": "sub-4b",
+        "title": "Column drop-zone highlight",
+        "status": "done",
+        "assigneeId": "member-2",
+        "estimatedHours": 1
+      },
+      {
+        "id": "sub-4c",
+        "title": "Persist status change to API",
+        "status": "done",
+        "assigneeId": "member-1",
+        "estimatedHours": 1
+      }
+    ]
   }
 ]

@@ -1,10 +1,12 @@
 import { readJson } from '../utils/data'
 import type { TimeEntry } from '../../composables/usePocStore'
 
-export default defineEventHandler(async (): Promise<TimeEntry | null> => {
+export default defineEventHandler(async (): Promise<TimeEntry[]> => {
   try {
-    return await readJson<TimeEntry | null>('timer.json')
+    const data = await readJson<TimeEntry | TimeEntry[] | null>('timer.json')
+    if (!data) return []
+    return Array.isArray(data) ? data : [data]
   } catch {
-    return null
+    return []
   }
 })
