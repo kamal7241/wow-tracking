@@ -1,11 +1,21 @@
 <template>
   <div class="app-shell">
     <aside class="sidebar">
-      <div class="brand">BIM WOW</div>
-      <p class="sidebar-copy">POC task management + time tracking</p>
+      <div class="brand">
+        <div class="brand-logo-mark">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+            <rect x="7" y="8" width="5" height="16" rx="2" fill="white"/>
+            <rect x="14" y="8" width="5" height="10" rx="2" fill="white" opacity="0.7"/>
+            <rect x="21" y="13" width="4" height="11" rx="2" fill="white" opacity="0.5"/>
+          </svg>
+        </div>
+        BIM WOW
+      </div>
       <nav class="nav-list">
         <NuxtLink to="/" class="nav-link" exact-active-class="active">Kanban board</NuxtLink>
-        <NuxtLink to="/time-tracking" class="nav-link" active-class="active">Time tracking</NuxtLink>
+        <NuxtLink to="/timesheet" class="nav-link" active-class="active">My Timesheet</NuxtLink>
+        <NuxtLink to="/time-tracking" class="nav-link" active-class="active">Tracking history</NuxtLink>
       </nav>
 
       <!-- Board overview (always visible) -->
@@ -52,15 +62,29 @@
 
     <div class="content-area">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">BIM WOW Management</p>
-          <h1>Proof of Concept</h1>
+        <div class="topbar-brand">
+          <div class="topbar-logo-mark">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="var(--accent)" />
+              <rect x="7" y="8" width="5" height="16" rx="2" fill="white" />
+              <rect x="14" y="8" width="5" height="10" rx="2" fill="white" opacity="0.7" />
+              <rect x="21" y="13" width="4" height="11" rx="2" fill="white" opacity="0.5" />
+            </svg>
+          </div>
+          <div class="topbar-brand-text">
+            <span class="topbar-brand-name">BIM WOW</span>
+            <span class="topbar-brand-sub">Management System</span>
+          </div>
         </div>
-        <div class="topbar-actions">
-          <span class="chip">Nuxt POC</span>
+
+        <div class="topbar-right">
+          <span class="topbar-date">{{ new Date().toLocaleDateString('en-GB', {
+            weekday: 'short', day: 'numeric', month:
+              'short', year: 'numeric' }) }}</span>
+          <div class="topbar-avatar" title="Kamal">KA</div>
         </div>
       </header>
-      <main class="page-content">
+      <main class="page-content pt-2">
         <NuxtPage />
       </main>
     </div>

@@ -1,15 +1,1 @@
-[
-  {
-    "id": "timer-1779711495632",
-    "taskId": "task-2",
-    "taskTitle": "User authentication flow",
-    "memberId": "member-2",
-    "startedAt": "2026-05-25T12:18:15.634Z",
-    "stoppedAt": "",
-    "durationMinutes": 0,
-    "notes": "Live tracking",
-    "billable": true,
-    "subtaskId": "sub-2d",
-    "subtaskTitle": "Password reset email flow"
-  }
-]
+[]

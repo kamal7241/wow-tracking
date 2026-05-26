@@ -2,7 +2,6 @@
   <div class="app-shell">
     <aside class="sidebar">
       <div class="brand">BIM WOW</div>
-      <p class="sidebar-copy">POC task management + time tracking</p>
       <nav class="nav-list">
         <NuxtLink to="/" class="nav-link" exact-active-class="active">Kanban board</NuxtLink>
         <NuxtLink to="/time-tracking" class="nav-link" active-class="active">Time tracking</NuxtLink>
