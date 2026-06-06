@@ -14,6 +14,7 @@
       </div>
       <nav class="nav-list">
         <NuxtLink to="/" class="nav-link" exact-active-class="active">Kanban board</NuxtLink>
+        <NuxtLink to="/profile" class="nav-link" active-class="active">Profile</NuxtLink>
         <NuxtLink to="/timesheet" class="nav-link" active-class="active">My Timesheet</NuxtLink>
         <NuxtLink to="/time-tracking" class="nav-link" active-class="active">Tracking history</NuxtLink>
       </nav>
@@ -81,7 +82,7 @@
           <span class="topbar-date">{{ new Date().toLocaleDateString('en-GB', {
             weekday: 'short', day: 'numeric', month:
               'short', year: 'numeric' }) }}</span>
-          <div class="topbar-avatar" title="Kamal">KA</div>
+          <NuxtLink to="/profile" class="topbar-avatar" title="Kamal">KA</NuxtLink>
         </div>
       </header>
       <main class="page-content pt-2">

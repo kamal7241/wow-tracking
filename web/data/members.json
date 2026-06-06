@@ -3,24 +3,161 @@
     "id": "member-1",
     "name": "Lina Hassan",
     "role": "Project Lead",
-    "initials": "LH"
+    "initials": "LH",
+    "experienceStars": 5,
+    "performanceStars": 4,
+    "bimKnowledge": "Expert",
+    "commitment": "Full-time",
+    "rmdProgress": 85,
+    "rmdDetails": [
+      { "name": "Project Management Training", "progress": 95 },
+      { "name": "Certifications", "progress": 85 },
+      { "name": "Mentorship & Coaching", "progress": 80 },
+      { "name": "Leadership Development", "progress": 90 }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/in/lina-hassan"
+      }
+    ],
+    "evaluationCriteria": [
+      { "name": "Leadership", "stars": 5 },
+      { "name": "Communication", "stars": 4 },
+      { "name": "Technical Quality", "stars": 4 }
+    ],
+    "basicInfo": {
+      "email": "lina@bimwow.com",
+      "phone": "+966 55 987 6543",
+      "department": "Project Management",
+      "location": "Jeddah, KSA",
+      "joinDate": "2022-06-01"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "Project Lead", "period": "Jan 2024 – Present", "status": "active" },
+      { "name": "Jeddah Tower Facade", "role": "Senior PM", "period": "Jan 2023 – Dec 2023", "status": "completed" }
+    ]
   },
   {
     "id": "member-2",
     "name": "Omar Adel",
     "role": "Developer",
-    "initials": "OA"
+    "initials": "OA",
+    "experienceStars": 3,
+    "performanceStars": 5,
+    "bimKnowledge": "Intermediate",
+    "commitment": "Full-time",
+    "rmdProgress": 60,
+    "rmdDetails": [
+      { "name": "Technical Training", "progress": 70 },
+      { "name": "Certifications", "progress": 40 },
+      { "name": "Mentorship & Coaching", "progress": 55 },
+      { "name": "Code Review Practice", "progress": 75 }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/in/omar-adel"
+      }
+    ],
+    "evaluationCriteria": [
+      { "name": "Code Quality", "stars": 4 },
+      { "name": "Problem Solving", "stars": 5 },
+      { "name": "Teamwork", "stars": 4 }
+    ],
+    "basicInfo": {
+      "email": "omar@bimwow.com",
+      "phone": "+966 50 222 3333",
+      "department": "Engineering",
+      "location": "Riyadh, KSA",
+      "joinDate": "2024-03-10"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "Backend Developer", "period": "Mar 2024 – Present", "status": "active" }
+    ]
   },
   {
     "id": "member-3",
     "name": "Nadia Said",
     "role": "Designer",
-    "initials": "NS"
+    "initials": "NS",
+    "experienceStars": 4,
+    "performanceStars": 4,
+    "bimKnowledge": "Beginner",
+    "commitment": "Part-time",
+    "rmdProgress": 90,
+    "rmdDetails": [
+      { "name": "Design Training", "progress": 95 },
+      { "name": "Certifications", "progress": 85 },
+      { "name": "UX Research Skills", "progress": 90 },
+      { "name": "Mentorship & Coaching", "progress": 88 }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/in/nadia-said"
+      },
+      {
+        "label": "Portfolio",
+        "url": "https://nadia.design"
+      }
+    ],
+    "evaluationCriteria": [
+      { "name": "Creativity", "stars": 5 },
+      { "name": "UI/UX Skills", "stars": 4 },
+      { "name": "Deadlines", "stars": 4 }
+    ],
+    "basicInfo": {
+      "email": "nadia@bimwow.com",
+      "phone": "+966 54 111 2222",
+      "department": "Design",
+      "location": "Dammam, KSA",
+      "joinDate": "2023-09-01"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "UI/UX Designer", "period": "Jan 2024 – Present", "status": "active" },
+      { "name": "Neom Residential Complex", "role": "Lead Designer", "period": "Sep 2023 – Dec 2023", "status": "completed" }
+    ]
   },
   {
     "id": "member-kamal",
     "name": "Kamal",
-    "role": "Full-stack Developer",
-    "initials": "KA"
+    "role": "Software Engineer",
+    "initials": "KA",
+    "experienceStars": 5,
+    "performanceStars": 5,
+    "bimKnowledge": "Advanced Level Standard",
+    "commitment": "Full-time",
+    "rmdProgress": 75,
+    "rmdDetails": [
+      { "name": "Technical Training", "progress": 90 },
+      { "name": "Certifications", "progress": 60 },
+      { "name": "Mentorship & Coaching", "progress": 70 },
+      { "name": "Leadership Development", "progress": 80 }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com"
+      }
+    ],
+    "evaluationCriteria": [
+      { "name": "Architecture", "stars": 5 },
+      { "name": "Code Quality", "stars": 4 },
+      { "name": "Delivery Speed", "stars": 5 },
+      { "name": "Communication", "stars": 4 }
+    ],
+    "basicInfo": {
+      "email": "kamal@bimwow.com",
+      "phone": "+966 55 123 4567",
+      "department": "Engineering",
+      "location": "Riyadh, KSA",
+      "joinDate": "2024-01-15"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "BIM Lead Developer", "period": "Jan 2024 – Present", "status": "active" },
+      { "name": "Neom Bay Phase 2", "role": "Full-stack Developer", "period": "Jun 2023 – Dec 2023", "status": "completed" },
+      { "name": "Riyadh Metro Station Interiors", "role": "Frontend Developer", "period": "Mar 2023 – May 2023", "status": "completed" }
+    ]
   }
 ]

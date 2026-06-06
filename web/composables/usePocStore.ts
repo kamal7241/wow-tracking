@@ -21,6 +21,7 @@ export interface Task {
   assigneeId?: string
   dueDate: string
   estimatedHours?: number
+  project?: string
   subtasks?: Subtask[]
 }
 
@@ -38,11 +39,51 @@ export interface TimeEntry {
   subtaskTitle?: string
 }
 
+export interface EvaluationCriteria {
+  name: string
+  stars: number
+}
+
+export interface ProfileLink {
+  label: string
+  url: string
+}
+
+export interface BasicInfo {
+  email?: string
+  phone?: string
+  department?: string
+  location?: string
+  joinDate?: string
+}
+
+export interface ProjectHistory {
+  name: string
+  role: string
+  period: string
+  status: 'completed' | 'active' | 'on-hold'
+}
+
+export interface RmdItem {
+  name: string
+  progress: number
+}
+
 export interface Member {
   id: string
   name: string
   role: string
   initials: string
+  experienceStars?: number
+  performanceStars?: number
+  bimKnowledge?: string
+  commitment?: string
+  rmdProgress?: number // Overall percentage from 0 to 100
+  rmdDetails?: RmdItem[]
+  links?: ProfileLink[]
+  evaluationCriteria?: EvaluationCriteria[]
+  basicInfo?: BasicInfo
+  projectsHistory?: ProjectHistory[]
 }
 
 export const usePocStore = () => {

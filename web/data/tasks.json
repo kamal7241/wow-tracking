@@ -1,10 +1,42 @@
 [
   {
+    "title": "Design ",
+    "description": "design review",
+    "status": "in-review",
+    "priority": "critical",
+    "dueDate": "2026-06-30",
+    "project": "King Abdullah Financial District",
+    "id": "7636ae1e-f237-4a3d-a1ec-5da60a547a6d",
+    "subtasks": [
+      {
+        "id": "9ff9603a-9b0b-44be-972b-e588c33ca923",
+        "title": "layout design",
+        "status": "done",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 4
+      },
+      {
+        "id": "ad5e11a4-d845-4f0f-9918-772c6f5c2eef",
+        "title": "furn design",
+        "status": "done",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 3
+      },
+      {
+        "id": "e2c7e233-1000-4acd-aa04-b8fd0e63b759",
+        "title": "design review",
+        "status": "done",
+        "assigneeId": "member-2"
+      }
+    ]
+  },
+  {
     "title": "structure design",
     "description": "",
-    "status": "in-progress",
+    "status": "in-review",
     "priority": "critical",
     "dueDate": "2026-05-26",
+    "project": "King Abdullah Financial District",
     "id": "5b36390f-dcf8-418d-85b5-ddd8412b6714",
     "subtasks": [
       {
@@ -13,6 +45,13 @@
         "status": "in-progress",
         "assigneeId": "member-kamal",
         "estimatedHours": 6
+      },
+      {
+        "id": "73000c86-0a7d-4538-8932-adb08cbbbfa3",
+        "title": "review design",
+        "status": "in-progress",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 1
       }
     ]
   }
