@@ -26,16 +26,6 @@ importers:
       vuedraggable:
         specifier: ^2.24.3
         version: 2.24.3
-    devDependencies:
-      autoprefixer:
-        specifier: ^10.5.0
-        version: 10.5.0(postcss@8.5.15)
-      postcss:
-        specifier: ^8.5.15
-        version: 8.5.15
-      tailwindcss:
-        specifier: ^4.3.0
-        version: 4.3.0
 
 packages:
 
@@ -3167,9 +3157,6 @@ packages:
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
-
-  tailwindcss@4.3.0:
-    resolution: {integrity: sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==}
 
   tar-stream@3.2.0:
     resolution: {integrity: sha512-ojzvCvVaNp6aOTFmG7jaRD0meowIAuPc3cMMhSgKiVWws1GyHbGd/xvnyuRKcKlMpt3qvxx6r0hreCNITP9hIg==}
@@ -6811,8 +6798,6 @@ snapshots:
       sax: 1.6.0
 
   tagged-tag@1.0.0: {}
-
-  tailwindcss@4.3.0: {}
 
   tar-stream@3.2.0:
     dependencies:

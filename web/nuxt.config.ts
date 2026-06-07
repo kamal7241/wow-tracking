@@ -5,5 +5,13 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
-  modules: ['@pinia/nuxt']
+  modules: ['@pinia/nuxt'],
+  nitro: {
+    publicAssets: [
+      { dir: '../data', baseURL: '/_data', maxAge: 0 }
+    ],
+    serverAssets: [
+      { baseName: 'data', dir: '../data' }
+    ]
+  }
 })
