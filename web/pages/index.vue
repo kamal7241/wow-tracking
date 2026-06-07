@@ -13,6 +13,13 @@
 
     <div class="board-controls">
       <div class="field">
+        <label for="projectFilter">Project</label>
+        <select id="projectFilter" v-model="selectedProjectId" class="project-select">
+          <option value="">All Projects</option>
+          <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+      <div class="field">
         <label for="search">Search tasks</label>
         <input id="search" v-model="filters.query" placeholder="Search by title, description, or assignee" />
       </div>
@@ -20,7 +27,7 @@
         <label for="assigneeFilter">Assignee</label>
         <select id="assigneeFilter" v-model="filters.assigneeId">
           <option value="">All members</option>
-          <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
+          <option v-for="member in displayMembers" :key="member.id" :value="member.id">{{ member.name }}</option>
         </select>
       </div>
     </div>
@@ -289,14 +296,39 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { usePocStore, type Task, type TaskStatus, type TaskPriority, type Subtask, type SubtaskStatus, type Member } from '@/composables/usePocStore'
+import { useRoute, useRouter } from 'vue-router'
 
 const store = usePocStore()
-const tasks = store.tasks
+const route = useRoute()
+const router = useRouter()
+const tasks = store.filteredTasks
 const members = store.members
+const projects = store.projects
+const selectedProjectId = store.selectedProjectId
 const timeEntries = store.timeEntries
 const activeTimers = store.activeTimers
+
+// Members shown in assignee filter: project members when filtered, all otherwise
+const displayMembers = computed(() => store.projectMembers.value)
+
+// Sync URL query param with selectedProjectId
+watch(() => route.query.project, (val) => {
+  if (val && typeof val === 'string') {
+    selectedProjectId.value = val
+  }
+}, { immediate: true })
+
+watch(selectedProjectId, (val) => {
+  const current = route.query.project as string | undefined
+  if (val && val !== current) {
+    router.replace({ query: { ...route.query, project: val } })
+  } else if (!val && current) {
+    const { project, ...rest } = route.query
+    router.replace({ query: rest })
+  }
+})
 const showDialog = ref(false)
 const draggedTaskId = ref<string | null>(null)
 const editingTaskId = ref<string | null>(null)
@@ -596,13 +628,17 @@ const resetForm = () => {
 
 const submitTask = async () => {
   if (!form.title.trim()) return
-  const payload = {
+  const payload: any = {
     title: form.title,
     description: form.description,
     status: form.status,
     priority: form.priority,
     dueDate: form.dueDate || new Date().toISOString().slice(0, 10),
     subtasks: formSubtasks.value.length ? [...formSubtasks.value] : undefined,
+  }
+
+  if (selectedProjectId.value) {
+    payload.projectId = selectedProjectId.value
   }
 
   if (editingTaskId.value) {
@@ -655,3 +691,10 @@ onUnmounted(() => {
   if (clockInterval) clearInterval(clockInterval)
 })
 </script>
+
+<style scoped>
+.project-select {
+  font-weight: 500;
+  min-width: 200px;
+}
+</style>

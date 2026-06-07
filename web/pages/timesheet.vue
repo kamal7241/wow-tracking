@@ -113,7 +113,10 @@
                 <span class="ts-feature-name">{{ feature.title }}</span>
                 <span :class="['badge', feature.priority]">{{ priorityLabels[feature.priority] }}</span>
               </div>
-              <span :class="['ts-status-chip', 'ts-status-chip--' + feature.status]">{{ statusLabels[feature.status] }}</span>
+              <div class="ts-feature-head-right">
+                <span v-if="projectName(feature.projectId)" class="ts-project-badge">{{ projectName(feature.projectId) }}</span>
+                <span :class="['ts-status-chip', 'ts-status-chip--' + feature.status]">{{ statusLabels[feature.status] }}</span>
+              </div>
             </div>
 
             <!-- My subtasks in this feature -->
@@ -387,7 +390,13 @@ const TARGET_HOURS = 8
 const store = usePocStore()
 const tasks = store.tasks
 const members = store.members
+const projects = store.projects
 const activeTimers = store.activeTimers
+
+const projectName = (projectId?: string) => {
+  if (!projectId) return ''
+  return projects.value.find(p => p.id === projectId)?.name ?? ''
+}
 
 // ─── 24h Calendar ─────────────────────────────────────────────────────────────
 const HOUR_H = 64 // px per hour row

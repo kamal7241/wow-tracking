@@ -159,5 +159,230 @@
       { "name": "Neom Bay Phase 2", "role": "Full-stack Developer", "period": "Jun 2023 – Dec 2023", "status": "completed" },
       { "name": "Riyadh Metro Station Interiors", "role": "Frontend Developer", "period": "Mar 2023 – May 2023", "status": "completed" }
     ]
+  },
+  {
+    "id": "member-5",
+    "name": "Fahad Al-Rashid",
+    "role": "BIM Coordinator",
+    "initials": "FR",
+    "experienceStars": 4,
+    "performanceStars": 4,
+    "bimKnowledge": "Expert",
+    "commitment": "Full-time",
+    "rmdProgress": 80,
+    "rmdDetails": [
+      { "name": "BIM Standards Training", "progress": 95 },
+      { "name": "Certifications", "progress": 80 },
+      { "name": "Clash Detection", "progress": 85 },
+      { "name": "Team Coordination", "progress": 70 }
+    ],
+    "links": [
+      { "label": "LinkedIn", "url": "https://linkedin.com/in/fahad-alrashid" }
+    ],
+    "evaluationCriteria": [
+      { "name": "BIM Coordination", "stars": 5 },
+      { "name": "Accuracy", "stars": 4 },
+      { "name": "Documentation", "stars": 4 },
+      { "name": "Communication", "stars": 3 }
+    ],
+    "basicInfo": {
+      "email": "fahad@bimwow.com",
+      "phone": "+966 56 444 5555",
+      "department": "BIM",
+      "location": "Riyadh, KSA",
+      "joinDate": "2023-02-15"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "BIM Coordinator", "period": "Feb 2024 – Present", "status": "active" },
+      { "name": "Neom Bay Phase 2", "role": "BIM Modeler", "period": "Feb 2023 – Jan 2024", "status": "completed" },
+      { "name": "Red Sea Resort Villas", "role": "Junior BIM Coordinator", "period": "Jun 2022 – Jan 2023", "status": "completed" }
+    ]
+  },
+  {
+    "id": "member-6",
+    "name": "Sara Al-Otaibi",
+    "role": "Structural Engineer",
+    "initials": "SO",
+    "experienceStars": 3,
+    "performanceStars": 4,
+    "bimKnowledge": "Advanced",
+    "commitment": "Full-time",
+    "rmdProgress": 65,
+    "rmdDetails": [
+      { "name": "Structural Analysis Training", "progress": 80 },
+      { "name": "Certifications", "progress": 50 },
+      { "name": "BIM Integration", "progress": 60 },
+      { "name": "Technical Writing", "progress": 70 }
+    ],
+    "links": [
+      { "label": "LinkedIn", "url": "https://linkedin.com/in/sara-otaibi" }
+    ],
+    "evaluationCriteria": [
+      { "name": "Structural Design", "stars": 4 },
+      { "name": "Analysis Accuracy", "stars": 4 },
+      { "name": "Collaboration", "stars": 5 },
+      { "name": "Problem Solving", "stars": 3 }
+    ],
+    "basicInfo": {
+      "email": "sara@bimwow.com",
+      "phone": "+966 50 666 7777",
+      "department": "Structural",
+      "location": "Jeddah, KSA",
+      "joinDate": "2024-06-01"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "Structural Engineer", "period": "Jun 2024 – Present", "status": "active" },
+      { "name": "Jeddah Tower Facade", "role": "Junior Structural Engineer", "period": "Mar 2024 – May 2024", "status": "completed" }
+    ]
+  },
+  {
+    "id": "member-7",
+    "name": "Youssef Khaled",
+    "role": "MEP Engineer",
+    "initials": "YK",
+    "experienceStars": 4,
+    "performanceStars": 3,
+    "bimKnowledge": "Intermediate",
+    "commitment": "Full-time",
+    "rmdProgress": 55,
+    "rmdDetails": [
+      { "name": "MEP Systems Training", "progress": 75 },
+      { "name": "Certifications", "progress": 45 },
+      { "name": "Energy Modeling", "progress": 50 },
+      { "name": "Coordination Skills", "progress": 55 }
+    ],
+    "links": [
+      { "label": "LinkedIn", "url": "https://linkedin.com/in/youssef-khaled" }
+    ],
+    "evaluationCriteria": [
+      { "name": "MEP Design", "stars": 4 },
+      { "name": "Code Compliance", "stars": 3 },
+      { "name": "Coordination", "stars": 4 },
+      { "name": "Deadlines", "stars": 2 }
+    ],
+    "basicInfo": {
+      "email": "youssef@bimwow.com",
+      "phone": "+966 55 888 9999",
+      "department": "MEP",
+      "location": "Riyadh, KSA",
+      "joinDate": "2023-08-20"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "MEP Lead", "period": "Aug 2023 – Present", "status": "active" },
+      { "name": "Neom Residential Complex", "role": "MEP Engineer", "period": "Jan 2023 – Jul 2023", "status": "completed" }
+    ]
+  },
+  {
+    "id": "member-8",
+    "name": "Aisha Mohammed",
+    "role": "Architect",
+    "initials": "AM",
+    "experienceStars": 5,
+    "performanceStars": 5,
+    "bimKnowledge": "Expert",
+    "commitment": "Full-time",
+    "rmdProgress": 92,
+    "rmdDetails": [
+      { "name": "Architectural Design", "progress": 98 },
+      { "name": "Certifications", "progress": 90 },
+      { "name": "Sustainability Training", "progress": 88 },
+      { "name": "Client Presentations", "progress": 95 }
+    ],
+    "links": [
+      { "label": "LinkedIn", "url": "https://linkedin.com/in/aisha-mohammed" },
+      { "label": "Portfolio", "url": "https://aisha-arch.com" }
+    ],
+    "evaluationCriteria": [
+      { "name": "Design Creativity", "stars": 5 },
+      { "name": "Technical Drawing", "stars": 5 },
+      { "name": "Client Communication", "stars": 5 },
+      { "name": "Project Vision", "stars": 4 }
+    ],
+    "basicInfo": {
+      "email": "aisha@bimwow.com",
+      "phone": "+966 54 333 4444",
+      "department": "Architecture",
+      "location": "Riyadh, KSA",
+      "joinDate": "2022-01-10"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "Lead Architect", "period": "Jan 2022 – Present", "status": "active" },
+      { "name": "Red Sea Resort Villas", "role": "Senior Architect", "period": "Jun 2022 – Dec 2023", "status": "completed" },
+      { "name": "Neom Bay Phase 2", "role": "Concept Architect", "period": "Mar 2022 – May 2022", "status": "completed" }
+    ]
+  },
+  {
+    "id": "member-9",
+    "name": "Tariq Nasser",
+    "role": "QA/QC Specialist",
+    "initials": "TN",
+    "experienceStars": 3,
+    "performanceStars": 3,
+    "bimKnowledge": "Intermediate",
+    "commitment": "Part-time",
+    "rmdProgress": 45,
+    "rmdDetails": [
+      { "name": "Quality Standards", "progress": 60 },
+      { "name": "Certifications", "progress": 35 },
+      { "name": "Inspection Training", "progress": 50 },
+      { "name": "Reporting Skills", "progress": 40 }
+    ],
+    "links": [
+      { "label": "LinkedIn", "url": "https://linkedin.com/in/tariq-nasser" }
+    ],
+    "evaluationCriteria": [
+      { "name": "Quality Assurance", "stars": 3 },
+      { "name": "Attention to Detail", "stars": 4 },
+      { "name": "Documentation", "stars": 3 },
+      { "name": "Timeliness", "stars": 2 }
+    ],
+    "basicInfo": {
+      "email": "tariq@bimwow.com",
+      "phone": "+966 56 111 0000",
+      "department": "Quality",
+      "location": "Dammam, KSA",
+      "joinDate": "2025-01-05"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "QA Inspector", "period": "Jan 2025 – Present", "status": "active" }
+    ]
+  },
+  {
+    "id": "member-10",
+    "name": "Reem Al-Zahrani",
+    "role": "Interior Designer",
+    "initials": "RZ",
+    "experienceStars": 4,
+    "performanceStars": 4,
+    "bimKnowledge": "Beginner",
+    "commitment": "Full-time",
+    "rmdProgress": 70,
+    "rmdDetails": [
+      { "name": "Interior Design Trends", "progress": 85 },
+      { "name": "3D Visualization", "progress": 80 },
+      { "name": "Material Selection", "progress": 70 },
+      { "name": "Client Management", "progress": 55 }
+    ],
+    "links": [
+      { "label": "LinkedIn", "url": "https://linkedin.com/in/reem-zahrani" },
+      { "label": "Behance", "url": "https://behance.net/reemzahrani" }
+    ],
+    "evaluationCriteria": [
+      { "name": "Creativity", "stars": 5 },
+      { "name": "Space Planning", "stars": 4 },
+      { "name": "Material Knowledge", "stars": 4 },
+      { "name": "Presentation Skills", "stars": 3 }
+    ],
+    "basicInfo": {
+      "email": "reem@bimwow.com",
+      "phone": "+966 55 777 8888",
+      "department": "Interior Design",
+      "location": "Riyadh, KSA",
+      "joinDate": "2024-04-01"
+    },
+    "projectsHistory": [
+      { "name": "King Abdullah Financial District", "role": "Interior Designer", "period": "Apr 2024 – Present", "status": "active" },
+      { "name": "Riyadh Metro Station Interiors", "role": "Senior Interior Designer", "period": "Sep 2023 – Mar 2024", "status": "completed" }
+    ]
   }
 ]

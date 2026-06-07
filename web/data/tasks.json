@@ -1,11 +1,46 @@
 [
   {
+    "title": "feature1",
+    "description": "description",
+    "status": "todo",
+    "priority": "medium",
+    "dueDate": "2026-06-07",
+    "projectId": "80dd88c0-8144-4f60-99b3-72a0a0d1c63e",
+    "id": "bc44b406-bad6-4c17-87ef-85f52fee2fc4",
+    "subtasks": [
+      {
+        "id": "6c7a137c-0702-4c9a-875c-f3ee46e67e2e",
+        "title": "proj-feature-task-01",
+        "status": "in-progress",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 1
+      }
+    ]
+  },
+  {
+    "title": "new feature",
+    "description": "desc",
+    "status": "in-progress",
+    "priority": "high",
+    "dueDate": "2026-06-30",
+    "id": "46602d52-293f-4c5d-b050-951f11b2886a",
+    "subtasks": [
+      {
+        "id": "9a71c3c8-e394-4ecf-b135-e4bc9b0fb87f",
+        "title": "layout design",
+        "status": "in-progress",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 2
+      }
+    ]
+  },
+  {
     "title": "Design ",
     "description": "design review",
     "status": "in-review",
     "priority": "critical",
     "dueDate": "2026-06-30",
-    "project": "King Abdullah Financial District",
+    "projectId": "proj-kafd",
     "id": "7636ae1e-f237-4a3d-a1ec-5da60a547a6d",
     "subtasks": [
       {
@@ -36,7 +71,7 @@
     "status": "in-review",
     "priority": "critical",
     "dueDate": "2026-05-26",
-    "project": "King Abdullah Financial District",
+    "projectId": "proj-kafd",
     "id": "5b36390f-dcf8-418d-85b5-ddd8412b6714",
     "subtasks": [
       {
@@ -52,6 +87,364 @@
         "status": "in-progress",
         "assigneeId": "member-kamal",
         "estimatedHours": 1
+      }
+    ]
+  },
+  {
+    "title": "MEP Systems Integration",
+    "description": "Integrate mechanical, electrical, and plumbing systems into the BIM model",
+    "status": "in-progress",
+    "priority": "high",
+    "dueDate": "2026-06-20",
+    "projectId": "proj-kafd",
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "subtasks": [
+      {
+        "id": "sub-mep-1",
+        "title": "HVAC system modeling",
+        "status": "done",
+        "assigneeId": "member-7",
+        "estimatedHours": 8
+      },
+      {
+        "id": "sub-mep-2",
+        "title": "Electrical layout",
+        "status": "in-progress",
+        "assigneeId": "member-7",
+        "estimatedHours": 6
+      },
+      {
+        "id": "sub-mep-3",
+        "title": "Plumbing routes",
+        "status": "todo",
+        "assigneeId": "member-7",
+        "estimatedHours": 5
+      },
+      {
+        "id": "sub-mep-4",
+        "title": "Clash detection review",
+        "status": "todo",
+        "assigneeId": "member-5",
+        "estimatedHours": 4
+      }
+    ]
+  },
+  {
+    "title": "Facade Design Finalization",
+    "description": "Complete facade panels and curtain wall detailing",
+    "status": "in-progress",
+    "priority": "critical",
+    "dueDate": "2026-06-15",
+    "projectId": "proj-kafd",
+    "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "subtasks": [
+      {
+        "id": "sub-fac-1",
+        "title": "Curtain wall detailing",
+        "status": "done",
+        "assigneeId": "member-8",
+        "estimatedHours": 10
+      },
+      {
+        "id": "sub-fac-2",
+        "title": "Panel material specs",
+        "status": "done",
+        "assigneeId": "member-8",
+        "estimatedHours": 4
+      },
+      {
+        "id": "sub-fac-3",
+        "title": "Structural attachment review",
+        "status": "in-progress",
+        "assigneeId": "member-6",
+        "estimatedHours": 6
+      },
+      {
+        "id": "sub-fac-4",
+        "title": "Thermal performance analysis",
+        "status": "todo",
+        "assigneeId": "member-6",
+        "estimatedHours": 5
+      }
+    ]
+  },
+  {
+    "title": "Interior Fit-out Level 3",
+    "description": "Complete interior design and fit-out for Level 3 offices",
+    "status": "in-progress",
+    "priority": "medium",
+    "dueDate": "2026-07-15",
+    "projectId": "proj-kafd",
+    "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+    "subtasks": [
+      {
+        "id": "sub-int-1",
+        "title": "Floor plan layout",
+        "status": "done",
+        "assigneeId": "member-10",
+        "estimatedHours": 6
+      },
+      {
+        "id": "sub-int-2",
+        "title": "Material board",
+        "status": "done",
+        "assigneeId": "member-10",
+        "estimatedHours": 3
+      },
+      {
+        "id": "sub-int-3",
+        "title": "Furniture selection",
+        "status": "in-progress",
+        "assigneeId": "member-10",
+        "estimatedHours": 4
+      },
+      {
+        "id": "sub-int-4",
+        "title": "Lighting design",
+        "status": "todo",
+        "assigneeId": "member-3",
+        "estimatedHours": 5
+      },
+      {
+        "id": "sub-int-5",
+        "title": "3D renders",
+        "status": "todo",
+        "assigneeId": "member-3",
+        "estimatedHours": 8
+      }
+    ]
+  },
+  {
+    "title": "QA Inspection Phase 1",
+    "description": "Quality assurance inspection of completed works",
+    "status": "todo",
+    "priority": "high",
+    "dueDate": "2026-06-25",
+    "projectId": "proj-kafd",
+    "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
+    "subtasks": [
+      {
+        "id": "sub-qa-1",
+        "title": "Structural inspection",
+        "status": "todo",
+        "assigneeId": "member-9",
+        "estimatedHours": 8
+      },
+      {
+        "id": "sub-qa-2",
+        "title": "MEP inspection",
+        "status": "todo",
+        "assigneeId": "member-9",
+        "estimatedHours": 6
+      },
+      {
+        "id": "sub-qa-3",
+        "title": "Defect report",
+        "status": "todo",
+        "assigneeId": "member-9",
+        "estimatedHours": 3
+      }
+    ]
+  },
+  {
+    "title": "BIM Model Coordination",
+    "description": "Coordinate all discipline models and resolve clashes",
+    "status": "in-progress",
+    "priority": "critical",
+    "dueDate": "2026-05-30",
+    "projectId": "proj-kafd",
+    "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
+    "subtasks": [
+      {
+        "id": "sub-bim-1",
+        "title": "Model federation",
+        "status": "done",
+        "assigneeId": "member-5",
+        "estimatedHours": 4
+      },
+      {
+        "id": "sub-bim-2",
+        "title": "Clash detection run",
+        "status": "done",
+        "assigneeId": "member-5",
+        "estimatedHours": 3
+      },
+      {
+        "id": "sub-bim-3",
+        "title": "Clash resolution tracking",
+        "status": "in-progress",
+        "assigneeId": "member-5",
+        "estimatedHours": 6
+      },
+      {
+        "id": "sub-bim-4",
+        "title": "Model cleanup",
+        "status": "todo",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 4
+      }
+    ]
+  },
+  {
+    "title": "Landscape Design",
+    "description": "External landscape and hardscape design for the villa cluster",
+    "status": "done",
+    "priority": "medium",
+    "dueDate": "2026-04-30",
+    "projectId": "proj-rsv",
+    "id": "f6a7b8c9-d0e1-2345-fabc-456789012345",
+    "subtasks": [
+      {
+        "id": "sub-land-1",
+        "title": "Planting plan",
+        "status": "done",
+        "assigneeId": "member-8",
+        "estimatedHours": 6
+      },
+      {
+        "id": "sub-land-2",
+        "title": "Irrigation layout",
+        "status": "done",
+        "assigneeId": "member-7",
+        "estimatedHours": 4
+      },
+      {
+        "id": "sub-land-3",
+        "title": "Hardscape materials",
+        "status": "done",
+        "assigneeId": "member-10",
+        "estimatedHours": 3
+      }
+    ]
+  },
+  {
+    "title": "Villa Type A - Architectural Drawings",
+    "description": "Complete architectural drawing set for Villa Type A",
+    "status": "in-review",
+    "priority": "high",
+    "dueDate": "2026-06-01",
+    "projectId": "proj-rsv",
+    "id": "a7b8c9d0-e1f2-3456-abcd-567890123456",
+    "subtasks": [
+      {
+        "id": "sub-villa-1",
+        "title": "Floor plans",
+        "status": "done",
+        "assigneeId": "member-8",
+        "estimatedHours": 8
+      },
+      {
+        "id": "sub-villa-2",
+        "title": "Elevations",
+        "status": "done",
+        "assigneeId": "member-8",
+        "estimatedHours": 5
+      },
+      {
+        "id": "sub-villa-3",
+        "title": "Sections",
+        "status": "in-progress",
+        "assigneeId": "member-8",
+        "estimatedHours": 4
+      },
+      {
+        "id": "sub-villa-4",
+        "title": "Detail drawings",
+        "status": "in-progress",
+        "assigneeId": "member-6",
+        "estimatedHours": 6
+      }
+    ]
+  },
+  {
+    "title": "Residential Tower Concept",
+    "description": "Develop concept design for the residential tower",
+    "status": "in-progress",
+    "priority": "high",
+    "dueDate": "2026-07-01",
+    "projectId": "proj-neom",
+    "id": "b8c9d0e1-f2a3-4567-bcde-678901234567",
+    "subtasks": [
+      {
+        "id": "sub-neom-1",
+        "title": "Massing study",
+        "status": "done",
+        "assigneeId": "member-8",
+        "estimatedHours": 6
+      },
+      {
+        "id": "sub-neom-2",
+        "title": "Unit layouts",
+        "status": "in-progress",
+        "assigneeId": "member-10",
+        "estimatedHours": 8
+      },
+      {
+        "id": "sub-neom-3",
+        "title": "Facade options",
+        "status": "in-progress",
+        "assigneeId": "member-3",
+        "estimatedHours": 5
+      },
+      {
+        "id": "sub-neom-4",
+        "title": "Sustainability assessment",
+        "status": "todo",
+        "assigneeId": "member-7",
+        "estimatedHours": 4
+      }
+    ]
+  },
+  {
+    "title": "Platform Development",
+    "description": "Build the BIM management platform features",
+    "status": "in-progress",
+    "priority": "critical",
+    "dueDate": "2026-06-30",
+    "projectId": "proj-platform",
+    "id": "c9d0e1f2-a3b4-5678-cdef-789012345678",
+    "subtasks": [
+      {
+        "id": "sub-plat-1",
+        "title": "Task management module",
+        "status": "done",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 20
+      },
+      {
+        "id": "sub-plat-2",
+        "title": "Time tracking module",
+        "status": "done",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 15
+      },
+      {
+        "id": "sub-plat-3",
+        "title": "Profile system",
+        "status": "in-progress",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 10
+      },
+      {
+        "id": "sub-plat-4",
+        "title": "Dashboard analytics",
+        "status": "todo",
+        "assigneeId": "member-kamal",
+        "estimatedHours": 12
+      },
+      {
+        "id": "sub-plat-5",
+        "title": "UI/UX design system",
+        "status": "done",
+        "assigneeId": "member-3",
+        "estimatedHours": 8
+      },
+      {
+        "id": "sub-plat-6",
+        "title": "API architecture",
+        "status": "done",
+        "assigneeId": "member-2",
+        "estimatedHours": 10
       }
     ]
   }

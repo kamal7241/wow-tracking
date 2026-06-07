@@ -1720,6 +1720,20 @@ img {
   background: var(--surface-strong);
   border-bottom: 1px solid var(--border);
 }
+.ts-feature-head-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ts-project-badge {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
 .ts-feature-title-row {
   display: flex;
   align-items: center;

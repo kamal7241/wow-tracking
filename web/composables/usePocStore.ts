@@ -3,6 +3,19 @@ import { computed } from 'vue'
 export type TaskStatus = 'todo' | 'in-progress' | 'in-review' | 'done'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'critical'
 export type SubtaskStatus = 'todo' | 'in-progress' | 'done'
+export type ProjectStatus = 'active' | 'on-hold' | 'completed' | 'archived'
+
+export interface Project {
+  id: string
+  name: string
+  description: string
+  status: ProjectStatus
+  clientName?: string
+  startDate?: string
+  endDate?: string
+  memberIds: string[]
+  createdAt: string
+}
 
 export interface Subtask {
   id: string
@@ -21,7 +34,7 @@ export interface Task {
   assigneeId?: string
   dueDate: string
   estimatedHours?: number
-  project?: string
+  projectId?: string
   subtasks?: Subtask[]
 }
 
@@ -89,6 +102,8 @@ export interface Member {
 export const usePocStore = () => {
   const tasks = useState<Task[]>('poc-tasks', () => [])
   const members = useState<Member[]>('poc-members', () => [])
+  const projects = useState<Project[]>('poc-projects', () => [])
+  const selectedProjectId = useState<string | null>('poc-selected-project', () => null)
   const timeEntries = useState<TimeEntry[]>('poc-time-entries', () => [])
   const activeTimers = useState<TimeEntry[]>('poc-active-timers', () => [])
   const loading = useState<boolean>('poc-loading', () => false)
@@ -109,10 +124,25 @@ export const usePocStore = () => {
     return Math.max(1, Math.floor(diff / 60000))
   })
 
+  const selectedProject = computed(() =>
+    selectedProjectId.value ? projects.value.find((p) => p.id === selectedProjectId.value) ?? null : null,
+  )
+
+  const filteredTasks = computed(() => {
+    if (!selectedProjectId.value) return tasks.value
+    return tasks.value.filter((t) => t.projectId === selectedProjectId.value)
+  })
+
+  const projectMembers = computed(() => {
+    const proj = selectedProject.value
+    if (!proj) return members.value
+    return members.value.filter((m) => proj.memberIds.includes(m.id))
+  })
+
   const loadAll = async () => {
     loading.value = true
     try {
-      await Promise.all([fetchTasks(), fetchMembers(), fetchTimeEntries(), fetchActiveTimer()])
+      await Promise.all([fetchTasks(), fetchMembers(), fetchProjects(), fetchTimeEntries(), fetchActiveTimer()])
     } finally {
       loading.value = false
     }
@@ -140,6 +170,36 @@ export const usePocStore = () => {
     const data = await $fetch<TimeEntry[]>('/api/timer')
     activeTimers.value = Array.isArray(data) ? data : (data ? [data as TimeEntry] : [])
     return activeTimers.value
+  }
+
+  const fetchProjects = async () => {
+    const data = await $fetch<Project[]>('/api/projects')
+    projects.value = data
+    return data
+  }
+
+  const createProject = async (project: Omit<Project, 'id' | 'createdAt'>) => {
+    const data = await $fetch<Project>('/api/projects', {
+      method: 'POST',
+      body: project,
+    })
+    projects.value.unshift(data)
+    return data
+  }
+
+  const updateProject = async (project: Project) => {
+    const data = await $fetch<Project>(`/api/projects/${project.id}`, {
+      method: 'PUT',
+      body: project,
+    })
+    projects.value = projects.value.map((p) => (p.id === data.id ? data : p))
+    return data
+  }
+
+  const deleteProject = async (projectId: string) => {
+    await $fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
+    projects.value = projects.value.filter((p) => p.id !== projectId)
+    if (selectedProjectId.value === projectId) selectedProjectId.value = null
   }
 
   const createTask = async (task: Omit<Task, 'id'>) => {
@@ -216,6 +276,11 @@ export const usePocStore = () => {
   return {
     tasks,
     members,
+    projects,
+    selectedProjectId,
+    selectedProject,
+    filteredTasks,
+    projectMembers,
     timeEntries,
     activeTimers,
     activeTimer,
@@ -225,11 +290,15 @@ export const usePocStore = () => {
     loadAll,
     fetchTasks,
     fetchMembers,
+    fetchProjects,
     fetchTimeEntries,
     fetchActiveTimer,
     createTask,
     updateTask,
     deleteTask,
+    createProject,
+    updateProject,
+    deleteProject,
     startTimer,
     stopTimer,
     createTimeEntry,

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "project",
+    "description": "desc",
+    "status": "active",
+    "clientName": "client",
+    "startDate": "2026-06-07",
+    "endDate": "2026-06-09",
+    "memberIds": [
+      "member-1",
+      "member-2",
+      "member-kamal"
+    ],
+    "createdAt": "2026-06-07T06:25:51.412Z",
+    "id": "80dd88c0-8144-4f60-99b3-72a0a0d1c63e"
+  },
+  {
+    "id": "proj-kafd",
+    "name": "King Abdullah Financial District",
+    "description": "Full BIM coordination and design for the KAFD mixed-use development including towers, podiums, and infrastructure.",
+    "status": "active",
+    "clientName": "KAFD Development Management",
+    "startDate": "2024-01-15",
+    "endDate": "2026-12-31",
+    "memberIds": [
+      "member-1",
+      "member-2",
+      "member-3",
+      "member-5",
+      "member-6",
+      "member-7",
+      "member-8",
+      "member-9",
+      "member-10",
+      "member-kamal"
+    ],
+    "createdAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "proj-rsv",
+    "name": "Red Sea Resort Villas",
+    "description": "Architectural and landscape design for luxury villa cluster at the Red Sea coast.",
+    "status": "active",
+    "clientName": "Red Sea Global",
+    "startDate": "2025-03-01",
+    "endDate": "2026-09-30",
+    "memberIds": [
+      "member-6",
+      "member-7",
+      "member-8",
+      "member-10"
+    ],
+    "createdAt": "2025-03-01T00:00:00.000Z"
+  },
+  {
+    "id": "proj-neom",
+    "name": "Neom Residential Complex",
+    "description": "Concept and detailed design for a residential tower within the Neom development.",
+    "status": "active",
+    "clientName": "NEOM Company",
+    "startDate": "2025-06-01",
+    "endDate": "2027-03-31",
+    "memberIds": [
+      "member-3",
+      "member-7",
+      "member-8",
+      "member-10"
+    ],
+    "createdAt": "2025-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "proj-platform",
+    "name": "BIM WOW Platform",
+    "description": "Internal development of the BIM management platform features and tools.",
+    "status": "active",
+    "clientName": "",
+    "startDate": "2025-01-01",
+    "endDate": "2026-12-31",
+    "memberIds": [
+      "member-2",
+      "member-3",
+      "member-kamal"
+    ],
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  }
+]

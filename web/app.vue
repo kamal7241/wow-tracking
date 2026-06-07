@@ -14,6 +14,7 @@
       </div>
       <nav class="nav-list">
         <NuxtLink to="/" class="nav-link" exact-active-class="active">Kanban board</NuxtLink>
+        <NuxtLink to="/projects" class="nav-link" active-class="active">Projects</NuxtLink>
         <NuxtLink to="/profile" class="nav-link" active-class="active">Profile</NuxtLink>
         <NuxtLink to="/timesheet" class="nav-link" active-class="active">My Timesheet</NuxtLink>
         <NuxtLink to="/time-tracking" class="nav-link" active-class="active">Tracking history</NuxtLink>
@@ -99,7 +100,7 @@ import { usePocStore } from '~/composables/usePocStore'
 const store = usePocStore()
 const activeTask = store.activeTask
 const activeTimer = store.activeTimer
-const tasks = store.tasks
+const tasks = store.filteredTasks
 const timeEntries = store.timeEntries
 const now = ref(Date.now())
 let clockInterval: ReturnType<typeof setInterval> | null = null
